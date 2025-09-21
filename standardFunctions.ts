@@ -101,6 +101,14 @@ const arrayRemoveAt=(index,arr)=>{
 	return removed
 }
 
+const toString =(value)=>{
+   if(typeof value =="number"){
+   return String(value)
+	}else if (Array.isArray(value)){
+		 return value.join('')
+  }
+}
+
 
 
 
@@ -109,6 +117,8 @@ export const standardFunctions = {
 	 "getInput":executeInput,
 	 "toInt":convertToInteger,
 	 "toFloat":convertToFloat,
+	 "toArray":toArray,
+	 "toString":toString,
 	 "arrayInsertAt":arrayInsertAt,
 	 "arrayInsert":arrayInsert,
 	 "arrayGet":arrayGet,
