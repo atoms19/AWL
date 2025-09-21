@@ -1,13 +1,14 @@
-declare r="a"
+declare s = "hi"
+if(!s){
+  declare s="bye"
+  printOut(s)
+}else{
+  printOut(s)
+}
+printOut(s)
 
-define name(){
- declare a="vishal"+r
- printOut("hey there" +a)
-  r=r+"b"
+define add(x,y){
+	  printOut(x+y)
 }
 
-name(1,2,3)
-name()
-name()
-
-printOut("i can still access a here "+a)
+add(4,5)

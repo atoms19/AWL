@@ -313,18 +313,57 @@ export function parse(tokens: Token[]) {
 	const parseFunctionDefinition = (): Statement => {
 		yum() //eating the define keyword
 		let functionName = peek(0)
-		yum() //skipping brackets
-		yum()
-		yum()
+		yum() //eating the function name  
+		yum() //eating the opening bracket
+		let nextToken = peek(0)
+		let params: any[] = []
+		while (nextToken && nextToken.type != "closingbracket") {
+			if (nextToken.type == "commaseperator") {
+				yum() //eat the commas and continue 
+			}
+			let param = parseBaseExpression();
+			params.push(param);
+			nextToken = peek(0); //
+		}
+		yumButOnly("closingbracket");
+
 		const body = parseBlock()
 		return {
 			type: "FunctionDefinition",
 			name: functionName.data,
-			body: body
+			body: body,
+			parameters: params.map(p => {
+				if (p.type != "Identifier") {
+					throwParserError("function parameters must be identifiers")
+				}
+				return p.name
+			})
 		}
 	}
 
+	const parseControlFlow = (): Statement => {
+		let keyword = yum().data //eat the keyword
+		return {
+			type: "ControlFlowStatement",
+			keyword: keyword as 'break' | 'continue'
+		}
+	}
 
+	const parseReturnStatement = (): Statement => {
+		yum() // eat the return keyword 
+		let val =peek(0)
+		if(val.type=="closingcurlybracket"){
+			return {
+				type: "ReturnStatement",
+				value:undefined
+			}
+		}
+		let exp = parseExpression()
+		return {
+			type: "ReturnStatement",
+			value: exp
+		}
+	}
 	const parseBody = (token: Token): Statement | undefined => {
 		switch (token.type) {
 			case "keyword":
@@ -337,6 +376,11 @@ export function parse(tokens: Token[]) {
 						return parseWhileLoop()
 					case "define":
 						return parseFunctionDefinition()
+					case "break":
+					case "continue":
+						return parseControlFlow() //eat the return keyword
+					case "return":
+						return parseReturnStatement()
 					default:
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}

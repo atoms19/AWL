@@ -1,4 +1,4 @@
-type token = 'keyword' | 'operator' | 'stringliteral' | 'numericliteral' | 'identifier' | 'assignment' | 'openingbracket' | 'closingbracket' | 'commaseperator' | 'openingcurlybracket' | 'closingcurlybracket' | 'Invalid'
+type token = 'keyword' | 'operator' | 'stringliteral' | 'numericliteral' | 'identifier' | 'assignment' | 'openingbracket' | 'closingbracket' | 'commaseperator' | 'openingcurlybracket' | 'closingcurlybracket' | 'Invalid' | 'openingsquarebracket' | 'closingsquarebracket';
 
 export interface Token {
 	type: token
@@ -7,7 +7,7 @@ export interface Token {
 	position: number
 }
 
-let Keywords: String[] = ["declare", "define", "if", "else", "while"]
+let Keywords: String[] = ["declare", "define", "if", "else", "while","return", "break", "continue"]
 let Operators: String[] = ["+", "-", "/", "*", "%", "^", "&&", "||", "==", ">", "<", "&", "|"]
 
 
@@ -98,7 +98,7 @@ export function lexate(program: string): Token[] {
 			else if (char.match(/\s/)) {
 				i++;
 			} else {
-				// Skip unknown characters
+				// skip unknown characters
 				i++;
 			}
 		}

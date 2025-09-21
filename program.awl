@@ -7,9 +7,11 @@ declare flag = 1 # assume number is prime
 
 while( check < n/2){
     if(n % check == 0){
-	    flag=0	
+	    flag=0
+		 break
 	 }
 	 check=check+1
+	 printOut("checking with "+check)
 }
 
 if(!flag){

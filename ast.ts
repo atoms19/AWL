@@ -8,7 +8,7 @@ export interface ExpressionStatement{
 export interface FunctionDefinition{
   type:"FunctionDefinition",
   name:string,
-  parameters?:[],
+  parameters?:string[],
   body:Statement[]
 }
 
@@ -65,8 +65,19 @@ export interface WhileStatement {
   condition:Expression,
   body:Statement[]
 }
+
+export interface ControFlowStatement{
+  type:'ControlFlowStatement',
+  keyword:'break' | 'continue' 
+  value?:Expression
+}
+
+export interface ReturnStatement{
+  type:'ReturnStatement',
+  value?:Expression
+}
   
-export type Statement = Declaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition
+export type Statement = Declaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition | ControFlowStatement | ReturnStatement
 
 export interface Program{
   type:'Program',
