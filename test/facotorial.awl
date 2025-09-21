@@ -1,0 +1,11 @@
+###A
+declare fact = toInt(getInput("enter your number : "))
+declare saved=fact
+declare result=1
+while(fact > 0){
+	 result=result*fact
+	 fact=fact-1
+}
+
+printOut("factorial of "+saved+" is "+result)
+##a#

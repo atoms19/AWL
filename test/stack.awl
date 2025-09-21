@@ -1,0 +1,50 @@
+declare stack = []
+declare maxLen = 10
+
+define pushStack(){
+  if(arrayLength(stack) < maxLen){
+  arrayInsert(stack,toInt(getInput("enter the number to insert : ")))
+  }else{
+	 printOut("stack overflow")
+  }
+}
+
+define popStack(){
+  if(arrayLength(stack) != 0 ){
+		declare temp = arrayGet(arrayLength(stack)-1,stack)
+		printOut(" the element "+temp+" was popped ")
+		arrayRemoveAt(arrayLength(stack)-1,stack)
+  }
+}
+
+define displayStack(){
+  declare i =0
+  while( i < arrayLength(stack)){
+      printOut(arrayGet(i,stack)+",")
+		i=i+1
+  }
+
+}
+
+
+define main(){
+
+declare isRunning = 1
+	 while(isRunning){
+			 printOut("1) insert into the stack")
+			 printOut("2) pop from the stack ")
+			 printOut("3) display the stack")
+			 printOut("3) exit ")
+			 declare opt = toInt(getInput("enter the option :" ))
+			 if(opt==1){
+				  pushStack()
+			 }else if(opt == 2){
+				  popStack()
+			 }else if(opt ==3){
+				 displayStack() 
+			 }else{
+			    isRunning = 0
+			 }
+	 }
+}
+main()

@@ -1,0 +1,20 @@
+#prime number checker 
+
+declare n = toInt(getInput("enter the number to check :"))
+
+declare check = 2 
+declare flag = 1 # assume number is prime 
+
+while( check < n/2){
+    if(n % check == 0){
+	    flag=0	
+	 }
+	 check=check+1
+}
+
+if(!flag){
+  printOut("number is not prime")
+}else{
+ printOut("the number is prime")
+}
+
