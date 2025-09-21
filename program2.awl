@@ -1,14 +1,13 @@
-declare s = "hi"
-if(!s){
-  declare s="bye"
-  printOut(s)
-}else{
-  printOut(s)
-}
-printOut(s)
 
-define add(x,y){
-	  printOut(x+y)
+# factorial using recursion
+
+
+define fac(n){
+	 if(n==0){
+		return 1
+	 }
+	 return "hjee"
 }
 
-add(4,5)
+
+printOut(fac(0))

@@ -111,8 +111,10 @@ export async function interpret(program: Program) {
 				throw new Error(`Interpretter Error : function ${f.callee?.name} expects ${fn.parameters.length} arguments got ${params.length}`)
 			 }
 			for (const stmt of fn.body) {
+			   if(scope.get("return")!==undefined) break
 				await interpretBody(stmt, scope)
 			}
+			return scope.get("return")
 		} else {
 			console.log(`Interpretter error : ${f.callee.name} is not a function`)
 		}
@@ -164,6 +166,9 @@ export async function interpret(program: Program) {
 			broken = true
 		} else if (statement.type == "ControlFlowStatement" && statement.keyword == "continue") {
 
+		}else if(statement.type=="ReturnStatement"){
+				  let v= await interpretValue(statement.value,env)
+				  env.define("return",v)
 		}
 		else {
 			await interpretValue(statement, env)
@@ -176,7 +181,7 @@ export async function interpret(program: Program) {
 		programCount++
 	}
 
-	if (debugMode) console.log("memory", memory, memory.get('s'));
+	if (debugMode) console.log("memory", global);
 }
 
 
