@@ -81,19 +81,14 @@ functions are declared using `define` keyword
 once defined a function can be called using its `name()` just like in other languages 
 
 ```awl
-declare a=0
-declare b=0
-declare c=0
-
+declare c =0
 define add() {
     c= a + b
 }
-a=10
-b=20
-add()
+add(20, 10) 
 printOut(c) // prints 30
 ```
-in awl as of now version 0.1 user defined functions doesnt support parameters or return values
+in awl as of now version 0.1 user defined functions doesnt support return or callstack yet
 
 
 ### Control flow in AWL
@@ -118,7 +113,10 @@ while (i < 10) {
     i = i + 1
 }
 ```
- as of now awl doesnt support for loops or switch statements , nor break and continue statements 
+
+`break` can be used to exit a loop , its behaviour for nested loops might be broken
+
+ as of now awl doesnt support for loops or switch statements , nor continue statements 
 they will be added soon 
 
 ### Operators in AWL

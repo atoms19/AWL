@@ -113,6 +113,7 @@ export async function interpret(program: Program) {
 			for (const stmt of fn.body) {
 			   if(scope.get("return")!==undefined) break
 				await interpretBody(stmt, scope)
+			 //console.log(stmt)
 			}
 			return scope.get("return")
 		} else {

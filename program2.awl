@@ -1,13 +1,21 @@
+## read stuff from users and push it to an array 
 
-# factorial using recursion
+
+declare array=[]
+declare n =toInt(getInput("enter the number of terms :"))
 
 
-define fac(n){
-	 if(n==0){
-		return 1
+declare i =0
+while( i < n ){
+	 declare elem = toInt(getInput("enter the term :")) 
+	 if(elem < 0 ){
+	   printOut("the element is negative , try again")
+	 }else {
+
+	 arrayInsert(array,elem)
+	 i = i+1 
 	 }
-	 return "hjee"
 }
 
-
-printOut(fac(0))
+printOut("the array is :")
+printOut(array)

@@ -28,6 +28,7 @@ export function lexate(program: string): Token[] {
 		  line=lines[ln]
 		  while(ln<lines.length && line.trim()!="###")
 			 line=lines[ln++]
+		  line=lines[--ln]
 		}
 		while (i < line.length) {
 			let char = line[i];
