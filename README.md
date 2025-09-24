@@ -55,6 +55,8 @@ toInt(x) // converts x to integer
 toString(x) // converts x to string
 toFloat(x) // converts x to float
 toArray(x) // converts x to array
+toChar(x) // converts x to character (x : charcter code)
+toCharCode(x) // converts x to character code (x : character)
 ```
 
 basic datatypes in awl are Numeric , String , Array
@@ -73,7 +75,6 @@ these are some of the builtin functions in awl
 - `arrayRemoveAt(index, x)` : removes the element at index from array x
 - `arrayGet(index, x)` : returns the element at index from array x
 - `arraySet(index, value, x)` : sets the element at index of array x to value
-
 string operations are expected to be done by converting them to array of characters
 
 #### user defined functions
@@ -81,15 +82,17 @@ functions are declared using `define` keyword
 once defined a function can be called using its `name()` just like in other languages 
 
 ```awl
-declare c =0
-define add() {
-    c= a + b
+define add(a,b) {
+    return a + b
 }
-add(20, 10) 
-printOut(c) // prints 30
+declare result = add(20, 10) 
+printOut(result) // prints 30
 ```
-in awl as of now version 0.1 user defined functions doesnt support return or callstack yet
 
+functions support `return` statement to return a value from the function
+statements after return are not executed
+
+only positional paramerters are supported as of now
 
 ### Control flow in AWL
 control flow in awl is done using `if` and `while` keywords 
@@ -116,8 +119,48 @@ while (i < 10) {
 
 `break` can be used to exit a loop , its behaviour for nested loops might be broken
 
- as of now awl doesnt support for loops or switch statements , nor continue statements 
-they will be added soon 
+
+#### for loops 
+due to furstration of writing while loops i finally took my time to write for loops
+for loops in awl is super simple they support ranges 
+
+##### ranges 
+```awl
+for (i in 0 -> 10 ){
+    printOut(i)
+}
+```
+the above loop will print numbers from 0 to 9
+as of now descending ranges are not supported neither is step values
+
+ranges can also be return values of functions 
+
+```awl
+for( i in  0 -> arrayLength(arr)){
+    printOut(arrayGet(i, arr))
+}
+```
+
+##### iterators 
+you can also iterate over arrays using for loops 
+
+```awl
+declare arr = [1,2,3,4,5]
+for( item in arr) {
+    printOut(item)
+}
+```
+
+string iterations are easier now 
+
+```awl
+declare str = "hello"
+for( char in toArray(str)) {
+    printOut(char)
+}
+```
+
+`break` and `continue` statements are supported in for loops as well
 
 ### Operators in AWL
 
@@ -170,8 +213,8 @@ and then run the following command to enable it
 
 ## Future Plans
 
-- add support for proper closures 
-- add support for user defined function parameters and return values
+- add support for proper closures [done] 
+- add support for user defined function parameters and return values [done]
 - add support for for loops and switch statements
 - add support for break and continue statements
 

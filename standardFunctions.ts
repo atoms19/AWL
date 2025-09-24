@@ -28,6 +28,20 @@ const convertToInteger = (value)=>{
 	return Math.floor(num)
 }
 
+const toCharCode = (char)=>{
+  if(typeof char !=="string" || char.length!==1){
+		throw new Error(`Runtime error: Argument must be a single character string`)
+	}
+	return char.charCodeAt(0)
+}
+
+const toChar = (code)=>{
+  if(typeof code !=="number" || !Number.isInteger(code) || code<0 || code>65535){
+		throw new Error(`Runtime error: Argument must be an integer between 0 and 65535`)
+	}
+	return String.fromCharCode(code)
+}
+
 const convertToFloat = (value)=>{
   let num = Number(value)
 	if(isNaN(num)){
@@ -112,6 +126,8 @@ const toString =(value)=>{
 
 
 
+
+
 export const standardFunctions = {
 	 "printOut":executeOutput,
 	 "getInput":executeInput,
@@ -125,6 +141,8 @@ export const standardFunctions = {
 	 "arraySet":arraySet,
 	 "arrayRemoveAt":arrayRemoveAt,
 	 "arrayLength":arrayLength 
+	 ,"toCharCode":toCharCode
+	  ,"toChar":toChar
 }
 
 

@@ -1,5 +1,5 @@
 " Keywords
-syntax keyword awlKeyword declare if else while for return define
+syntax keyword awlKeyword declare for break in if else while for return define
 highlight link awlKeyword Keyword
 
 
@@ -16,7 +16,7 @@ syntax region awlString start=+"+ end=+"+
 highlight link awlString String
 
 " Functions
-syntax keyword awlFunction printOut toInt toFloat getInput toString toArray arrayInset arrayInsertAt arrayRemove arrayRemoveAt arrayLength  arraySet arrayGet
+syntax keyword awlFunction printOut toInt toFloat getInput toString toArray arrayInset arrayInsertAt arrayRemove arrayRemoveAt arrayLength  arraySet arrayGet toChar toCharCode 
 highlight link awlFunction Function
 
 

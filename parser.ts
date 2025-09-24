@@ -1,5 +1,5 @@
 import type { Token } from "./lexer.ts"
-import type { BinaryExpression, Declaration, Program, Statement } from "./ast.ts"
+import type { BinaryExpression, Declaration, Expression, Program, Statement } from "./ast.ts"
 import { debugMode } from "./main.ts";
 
 export function parse(tokens: Token[]) {
@@ -32,7 +32,7 @@ export function parse(tokens: Token[]) {
 	}
 
 	const parseExpression = () => {
-		return parse6Expression()
+		return parse7Expression()
 	}
 	const parse7Expression = () => {
 		let left: any = parse6Expression()
@@ -365,24 +365,44 @@ export function parse(tokens: Token[]) {
 		}
 	}
 
-	const parseForLoop=()=>{
+	const parseForLoop=():Statement=>{
 	 yum() //eat the for keyword
 	 yumButOnly("openingbracket")
-    let body: Statement[] = []
-	 let state = 0
-    while(peek(0)&& peek(0).type!="closingbracket"){
-		if(peek(0).type=="commaseperator"){
-				  yum() 
-				  state+=1
-		}
-		let line = parseBody(peek(0))
-		if(state>2) throwParserError("for loop can only have 3 statements")
-	   if(!state){
-		if(line) body.push(line)
-		}
-
+	 let iterator = peek(0) 
+	 if(iterator.type!="identifier"){
+		throwParserError("expected identifier as iterator variable")
 	 }
-	}
+	 yum() //eat the iterator
+	 let next = peek(0)
+	 if(!(next.type=="keyword" && next.data=="in")) {
+		throwParserError("expected 'in' keyword after iterator variable")
+	 }
+	 yum()	
+	 let startExpression=parseExpression()
+	 let endExpression:Expression
+    let next1=peek(0)
+	 if(next1.type=="operator" && next1.data=="->"){
+		yum() //eat the comma
+		endExpression = parseExpression()
+		yumButOnly("closingbracket")
+	 }
+	 else if(next1.type=="closingbracket"){
+		yum() //eat the closing bracket
+	 }
+	 yum() //eat the opening curly bracket
+	 let body = parseBlock()
+	 yum() //eat the closing curly bracket
+	 return {
+		type: "ForStatement",
+		iterator:{
+	 			type: "Identifier",
+			name: iterator.data
+		},
+		iterable: startExpression,
+		end: endExpression!,
+		body: body
+	 } 
+	 }
 
 	const parseBody = (token: Token): Statement | undefined => {
 		switch (token.type) {
@@ -402,6 +422,7 @@ export function parse(tokens: Token[]) {
 					case "return":
 						return parseReturnStatement()
 					case "for":
+						 return parseForLoop()
 					default:
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}

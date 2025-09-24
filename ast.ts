@@ -66,6 +66,14 @@ export interface WhileStatement {
   body:Statement[]
 }
 
+export interface ForStatement {
+  type:'ForStatement',
+  iterator:Identifier,
+  iterable:Expression,
+  end?:Expression,
+  body:Statement[]
+}
+
 export interface ControFlowStatement{
   type:'ControlFlowStatement',
   keyword:'break' | 'continue' 
@@ -77,7 +85,7 @@ export interface ReturnStatement{
   value?:Expression
 }
   
-export type Statement = Declaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition | ControFlowStatement | ReturnStatement
+export type Statement = Declaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition | ControFlowStatement | ReturnStatement | ForStatement
 
 export interface Program{
   type:'Program',

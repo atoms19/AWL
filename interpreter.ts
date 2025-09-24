@@ -4,17 +4,16 @@ import { debugMode } from "./main.ts"
 import { standardFunctions } from "./standardFunctions.ts"
 
 class ReturnEventError extends Error {
-		val:any
-	constructor(message: string,value:any) {
+	val: any
+	constructor(message: string, value: any) {
 		super(message)
-		this.val=value
+		this.val = value
 		this.name = "ReturnEventError"
 	}
 }
 
 
 export async function interpret(program: Program) {
-	const memory = new Map()
 
 	const global = new Environment()
 
@@ -113,24 +112,23 @@ export async function interpret(program: Program) {
 		} else if (await env.get(f.callee.name)) {
 			let fn = env.get(f.callee.name)
 			let scope = new Environment(env)
-		   if(params.length==fn.parameters.length){
-			  params.forEach((param,i)=>{
-					 scope.define(fn.parameters[i],param)
-			  })
-			 }else{
+			if (params.length == fn.parameters.length) {
+				params.forEach((param, i) => {
+					scope.define(fn.parameters[i], param)
+				})
+			} else {
 				throw new Error(`Interpretter Error : function ${f.callee?.name} expects ${fn.parameters.length} arguments got ${params.length}`)
-			 }
-
-		  try {
-			for (const stmt of fn.body) {
-			   if(scope.get("return")!==undefined) break
-				await interpretBody(stmt, scope)
 			}
-		  }catch (e:any){
-			 if(e instanceof ReturnEventError){
-				return e.val
-			 }
-		  }
+
+			try {
+				for (const stmt of fn.body) {
+					await interpretBody(stmt, scope)
+				}
+			} catch (e: any) {
+				if (e instanceof ReturnEventError) {
+					return e.val
+				}
+			}
 		} else {
 			console.log(`Interpretter error : ${f.callee.name} is not a function`)
 		}
@@ -167,6 +165,35 @@ export async function interpret(program: Program) {
 		}
 		broken = false
 	}
+
+	const interpretForStatement = async (statement: Statement, env: Environment) => {
+		let scope = new Environment(env)
+		if (statement.type != "ForStatement") throw new Error("Not a for statement")
+		if (statement.end) {
+			let start = await interpretValue(statement.iterable, env)
+			let end = await interpretValue(statement.end, env)
+			for (let i = start; i < end && !broken; i++) {
+				scope.define(statement.iterator.name, i)
+				for (const stmt of statement.body) {
+					await interpretBody(stmt, scope)
+				}
+			}
+			broken = false
+		} else {
+			let iterable = await interpretValue(statement.iterable, env)
+			if (!Array.isArray(iterable)) throw new Error("Not an array")
+			for (const item of iterable) {
+				if (broken) break
+				scope.define(statement.iterator.name, item)
+				for (const stmt of statement.body) {
+					await interpretBody(stmt, scope)
+				}
+			}
+			broken=false
+		}
+
+	}
+
 	const interpretBody = async (statement: Statement, env: Environment) => {
 		if (statement.type == "Declaration") {
 			await interpretDeclaration(statement, env)
@@ -178,13 +205,16 @@ export async function interpret(program: Program) {
 			await interpretIfStatenmet(statement, env)
 		} else if (statement.type == "WhileStatement") {
 			await interpretWhileStatement(statement, env)
+		} else if (statement.type == "ForStatement") {
+			await interpretForStatement(statement, env)
+
 		} else if (statement.type == "ControlFlowStatement" && statement.keyword == "break") {
 			broken = true
 		} else if (statement.type == "ControlFlowStatement" && statement.keyword == "continue") {
 
-		}else if(statement.type=="ReturnStatement"){
-				  let v= await interpretValue(statement.value,env)
-				  throw new ReturnEventError("Return statement encountered",v)
+		} else if (statement.type == "ReturnStatement") {
+			let v = await interpretValue(statement.value, env)
+			throw new ReturnEventError("Return statement encountered", v)
 		}
 		else {
 			await interpretValue(statement, env)

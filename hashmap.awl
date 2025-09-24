@@ -1,0 +1,51 @@
+# implementing hashing algorithm in awl
+declare hashTable = []
+declare maxCapacity=16
+declare i =0 
+while(i<maxCapacity){
+  arrayInsert(hashTable,0)
+  i=i+1
+}
+
+define hash(s){
+  declare h = 0
+  declare p = 31
+  declare st=toArray(s) 
+  declare i=0
+  while( i < arrayLength(st)){
+    h = h * p + toCharCode(arrayGet(i,st))
+	 i=i+1
+  }
+  return h
+}
+
+define hashTablePut(key,value){
+    printOut("recived "+key)
+    declare index =  hash(key) % maxCapacity
+	 arraySet(index,hashTable,value)
+}
+
+define hashTableGet(key){
+	 return arrayGet(hash(key) % maxCapacity,hashTable)
+}
+
+hashTablePut("apple",42)
+hashTablePut("atoms kun",23)
+printOut(hashTable)
+printOut(hashTableGet("apple"))
+printOut(hashTableGet("atoms kun"))
+
+
+
+###
+awl v0.02
+
+
+declare hashTable=[]
+declare maxCapacity=16
+
+for(i in 0..16){
+
+
+}
+###

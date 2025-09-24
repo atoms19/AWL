@@ -1,21 +1,15 @@
 ## read stuff from users and push it to an array 
 
-define readArray(){
-
-  declare array=[]
-  declare n =toInt(getInput("enter the number of terms :"))
-
-
-  declare i =0
-  while( i < n ){
-		declare elem = toInt(getInput("enter the term :")) 
-		if(elem < 0 ){
-		  printOut("the element is negative , try again")
-		}else {
-		arrayInsert(array,elem)
-		i = i+1 
-		}
-  }
+for( i in 0 -> 10){
+	printOut(i)
+	i = i + 1
 }
-readArray()
-printOut(array,n)
+printOut("done with while loop")
+
+
+###
+for ( i in 1,100){
+	printOut(i)
+}
+
+###
