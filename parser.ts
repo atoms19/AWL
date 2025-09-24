@@ -364,6 +364,26 @@ export function parse(tokens: Token[]) {
 			value: exp
 		}
 	}
+
+	const parseForLoop=()=>{
+	 yum() //eat the for keyword
+	 yumButOnly("openingbracket")
+    let body: Statement[] = []
+	 let state = 0
+    while(peek(0)&& peek(0).type!="closingbracket"){
+		if(peek(0).type=="commaseperator"){
+				  yum() 
+				  state+=1
+		}
+		let line = parseBody(peek(0))
+		if(state>2) throwParserError("for loop can only have 3 statements")
+	   if(!state){
+		if(line) body.push(line)
+		}
+
+	 }
+	}
+
 	const parseBody = (token: Token): Statement | undefined => {
 		switch (token.type) {
 			case "keyword":
@@ -381,6 +401,7 @@ export function parse(tokens: Token[]) {
 						return parseControlFlow() //eat the return keyword
 					case "return":
 						return parseReturnStatement()
+					case "for":
 					default:
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}

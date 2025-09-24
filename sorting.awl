@@ -1,0 +1,15 @@
+# selection sort 
+
+
+declare array = [1,2,6,5,7,3,9]
+define fun(n){
+  printOut("function called for "+n)
+  if(n==0){
+	 return 1;
+  }
+	 return n*fun(n-1)
+}
+
+printOut(fun(5))
+
+

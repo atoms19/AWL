@@ -45,7 +45,9 @@ export class Environment {
 				p = p.parent
 			}
 
-		//	throw new Error("Interpretter error :"+value +"is not declared")
+			
+
+	//	throw new Error("Interpretter error :"+value +"is not declared")
 		}
 	}
 }

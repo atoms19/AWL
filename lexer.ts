@@ -7,7 +7,7 @@ export interface Token {
 	position: number
 }
 
-let Keywords: String[] = ["declare", "define", "if", "else", "while","return", "break", "continue"]
+let Keywords: String[] = ["declare", "define", "if", "else", "while","return", "break", "continue","for"]
 let Operators: String[] = ["+", "-", "/", "*", "%", "^", "&&", "||", "==", ">", "<", "&", "|"]
 
 

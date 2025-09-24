@@ -3,6 +3,16 @@ import { Environment } from "./environment.ts"
 import { debugMode } from "./main.ts"
 import { standardFunctions } from "./standardFunctions.ts"
 
+class ReturnEventError extends Error {
+		val:any
+	constructor(message: string,value:any) {
+		super(message)
+		this.val=value
+		this.name = "ReturnEventError"
+	}
+}
+
+
 export async function interpret(program: Program) {
 	const memory = new Map()
 
@@ -110,12 +120,17 @@ export async function interpret(program: Program) {
 			 }else{
 				throw new Error(`Interpretter Error : function ${f.callee?.name} expects ${fn.parameters.length} arguments got ${params.length}`)
 			 }
+
+		  try {
 			for (const stmt of fn.body) {
 			   if(scope.get("return")!==undefined) break
 				await interpretBody(stmt, scope)
-			 //console.log(stmt)
 			}
-			return scope.get("return")
+		  }catch (e:any){
+			 if(e instanceof ReturnEventError){
+				return e.val
+			 }
+		  }
 		} else {
 			console.log(`Interpretter error : ${f.callee.name} is not a function`)
 		}
@@ -169,7 +184,7 @@ export async function interpret(program: Program) {
 
 		}else if(statement.type=="ReturnStatement"){
 				  let v= await interpretValue(statement.value,env)
-				  env.define("return",v)
+				  throw new ReturnEventError("Return statement encountered",v)
 		}
 		else {
 			await interpretValue(statement, env)
