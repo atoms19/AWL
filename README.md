@@ -1,3 +1,7 @@
+<h1 text-align="center">
+<img src="./assets/awl-transparent.png" alt="AWL Logo" width="200"/>
+<h1>
+
 # AWL 
 
 AWl is a minialist interpreted programming language 
