@@ -11,19 +11,19 @@ define pushStack(){
 
 define popStack(){
   if(arrayLength(stack) != 0 ){
-		declare temp = arrayGet(arrayLength(stack)-1,stack)
+		declare temp = stack[arrayLength(stack)-1]
 		printOut(" the element "+temp+" was popped ")
 		arrayRemoveAt(arrayLength(stack)-1,stack)
+		stack->stack[arrayLength(stack) -1 ]
   }
 }
 
 define displayStack(){
   declare i =0
   while( i < arrayLength(stack)){
-      printOut(arrayGet(i,stack)+",")
+      printOut(stack[i]+",")
 		i=i+1
   }
-
 }
 
 
