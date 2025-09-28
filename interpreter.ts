@@ -38,7 +38,38 @@ export async function interpret(program: Program) {
 		} else if (val.type == "Identifier") {
 			if (debugMode) console.log(val.name, env, env.get(val.name))
 			return env.get(val.name)
+		} else if (val.type == "MemberExpression") {
+			let identifier = await interpretValue(val.operand, env)
+			let property = await interpretValue(val.property, env)
+			if (!identifier[property]) {
+				throw new Error(`Interpretter Error : Property ${property} does not exist on ${identifier}`)
+			}
+			if (val.isRange) {
+				let end = await interpretValue(val.isRange.end, env)
+				let step = (val.isRange.step) ? (await interpretValue(val.isRange.step, env)) : ((property < end) ? 1 : -1)
+				let range: any[] = []
+				let comparisonFn = (index: number, end: number) => {
+					if (step > 0) {
+						return index < end
+					} else if (step < 0) {
+						return index > end
+					}
+					return false;
+				}
+				for (let i = property; comparisonFn(i,end); i += step) {
+					range.push(identifier[i])
+				}
+				if(typeof identifier=="string"){
+								return range.join("")
+				}
+
+				return range;
+
+			}
+
+			return identifier[property]
 		}
+
 	}
 
 	const interpretFunctionDefinition = async (fn: FunctionDefinition) => {
@@ -137,6 +168,13 @@ export async function interpret(program: Program) {
 
 	const interpretAssignment = async (d, env: Environment) => {
 		let v = await interpretValue(d.value, env)
+		let prop = d.property ? await interpretValue(d.property, env) : null
+		if (prop) {
+				  let obj = env.get(d.identifier)
+				  obj[prop] = v
+				  env.set(d.identifier, obj)
+				  return
+	 }
 		env.set(d.identifier, v)
 	}
 
@@ -172,13 +210,22 @@ export async function interpret(program: Program) {
 		if (statement.end) {
 			let start = await interpretValue(statement.iterable, env)
 			let end = await interpretValue(statement.end, env)
-			for (let i = start; i < end && !broken; i++) {
+			let step = (statement.step) ? await interpretValue(statement.step, env) : ((start < end) ? 1 : -1)
+			let comparisonFn = (index: number, end: number) => {
+				if (step > 0) {
+					return index < end
+				} else if (step < 0) {
+					return index > end
+				}
+				return false;
+			}
+
+			for (let i = start; comparisonFn(i, end) && !broken; i += step) {
 				scope.define(statement.iterator.name, i)
 				for (const stmt of statement.body) {
 					await interpretBody(stmt, scope)
 				}
 			}
-			broken = false
 		} else {
 			let iterable = await interpretValue(statement.iterable, env)
 			if (!Array.isArray(iterable)) throw new Error("Not an array")
@@ -189,7 +236,7 @@ export async function interpret(program: Program) {
 					await interpretBody(stmt, scope)
 				}
 			}
-			broken=false
+			broken = false
 		}
 
 	}

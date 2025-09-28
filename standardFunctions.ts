@@ -70,28 +70,6 @@ const arrayInsert=(arr,value)=>{
 	return arr
 }
 
-const arrayGet=(index,arr)=>{
-  if(!Array.isArray(arr)){
-		throw new Error(`Runtime error: Second argument must be an array`)
-	}
-	if(typeof index!=="number" || index<0 || index>=arr.length || !Number.isInteger(index)){
-		throw new Error(`Runtime error: Index must be a valid non-negative integer within array bounds`)
-	}
-	return arr[index]
-}
-
-const arraySet = (index,arr,value)=>{
-   if(!Array.isArray(arr)){
-		throw new Error(`Runtime error: Second argument must be an array`)
-	}
-	if(typeof index!=="number" || index<0 || index>=arr.length || !Number.isInteger(index)){
-		throw new Error(`Runtime error: Index must be a valid non-negative integer within array bounds`)
-	}
-	arr[index]=value
-	if(debugMode) console.log(`Set index ${index} in array to ${value}. New array:`, arr)
-	return arr
-}
-
 const arrayLength =(arr)=>{
    if(!Array.isArray(arr)){
 		throw new Error(`Runtime error: Argument must be an array`)
@@ -135,10 +113,8 @@ export const standardFunctions = {
 	 "toFloat":convertToFloat,
 	 "toArray":toArray,
 	 "toString":toString,
-	 "arrayInsertAt":arrayInsertAt,
 	 "arrayInsert":arrayInsert,
-	 "arrayGet":arrayGet,
-	 "arraySet":arraySet,
+	 "arrayInsertAt":arrayInsertAt,
 	 "arrayRemoveAt":arrayRemoveAt,
 	 "arrayLength":arrayLength 
 	 ,"toCharCode":toCharCode

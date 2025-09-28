@@ -1,15 +1,146 @@
-## read stuff from users and push it to an array 
+### 
+ 
+ merge( a , low , mid ,high) {
+		i = low 
+		x= low 
+		y= mid + 1
+		while ( x <= mid && y< = high){
+            if a[x] <= a[y] {
+				    b[i] = a[x]
+					 i++
+					 x++
+				}else{
+				  b[i] = a[y]
+				  y++
+				  i++
+			   }
+		}
+			 while( x < = mid) {
+			   b[i] = a[x] 
+				i++
+				x++
+			 }
 
-for( i in 0 -> 10){
-	printOut(i)
-	i = i + 1
+			 while( y < =  high ){
+						     b[i] = a[y]
+							  i++
+							  y++
+			 }
+
+		  for i low -> high {
+		  			  a[i] = b[i]
+		  } 
+	 }
+
+
+
+
+
+result = [] 
+left = [] 
+right = []
+
+i = len(left)
+j = len(right)
+r =0
+
+
+while ( i > 0 && j > 0){
+	 if(left[i] < right[j]){
+	   result[r] = left[i]
+		r++
+		i--
+	 }else{
+	   result[r] = right[j]
+	   r++	
+		j--
 }
-printOut("done with while loop")
 
-
-###
-for ( i in 1,100){
-	printOut(i)
+while( i > 0){
+	 result[r] = left[i]
+	 r++
+	 i--
 }
 
+while( j > 0){
+	 result[r] = right[j]
+	 r++
+	 j--
+}
+
+return result
+
+
+on same array ============================================= 
+merge(a , start , mid , end){
+a =[]
+b=[]
+r = 0
+left = start 
+right = mid 
+
+while( left <= mid && right <= end  ){
+	 if(a[left] < a[right]){
+	   b[r] = a[left]
+		r++
+		left++
+	 }else{
+	   b[r] = a[right]
+		r++
+		ritght++
+	 }
+}
+
+while (left < = mid){
+	 b[r] = a[left]
+	 r++
+	 left++
+}
+
+while( right <= end ){
+	 b[r] = a[right]
+	 r++
+	 right++
+}
+
+// transfer the things from b to a 
+for( i in 0 -> r -1 ){
+	 a[i] = b[i]
+}
+}
+
+mergeSort ( low, high){
+   if ( low < high ){
+	 mid = (low + high )/2
+	 mergeSort(a, low,mid)
+	 mergeSort(a,mid+1,high)
+	 merge(a,low ,mid,high)
+  }
+}
+
+
+
+O(n log n) time complexity  
+
+1) illustrate merge sort on 36 87 58 69 70 47 98 
+
+
+36 87 68  69     | 70 47 98 
+
+36 87 68 | 69      70 47 | 98
+
+36 87 |  68  69     70 | 47 | 98
+
+36 | 87  | 68 | 69 | 70 | 47 | 98
+
+36,87     68,69      70,47     98
+
+ 36,68 ,69 ,87           
 ###
+
+
+
+
+
+
+

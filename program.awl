@@ -1,22 +1,2 @@
-#prime number checker 
 
-declare n = toInt(getInput("enter the number to check :"))
-
-declare check = 2 
-declare flag = 1 # assume number is prime 
-
-while( check < n/2){
-    if(n % check == 0){
-	    flag=0
-		 break
-	 }
-	 check=check+1
-	 printOut("checking with "+check)
-}
-
-if(!flag){
-  printOut("number is not prime")
-}else{
- printOut("the number is prime")
-}
-
+declare s = [1,2,3,4,5]

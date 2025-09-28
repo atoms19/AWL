@@ -1,4 +1,4 @@
-export type Expression = BinaryExpression | UnaryExpression | NumericLiteral | FunctionCall 
+eeport type Expression = BinaryExpression | UnaryExpression | NumericLiteral | FunctionCall | MemberExpression 
 
 export interface ExpressionStatement{
   type:'ExpressionStatement',
@@ -39,8 +39,18 @@ export interface UnaryExpression{
   type:'UnaryExpression',
   operator:string,
   argument:Expression
-
 }
+
+export interface MemberExpression {
+   type:'MemberExpression',
+	operand : Expression,
+	isRange?:{
+      step?: Expression,   
+		end: Expression
+	},
+	property : Expression,
+}
+
 export interface Declaration {
   type:'Declaration',
   identifier:string,
@@ -50,6 +60,7 @@ export interface Declaration {
 export interface Assignment {
   type:'Assignment',
   identifier:string,
+  property?:Expression,
   value:Expression
 }
 
@@ -71,6 +82,7 @@ export interface ForStatement {
   iterator:Identifier,
   iterable:Expression,
   end?:Expression,
+  step?:Expression,
   body:Statement[]
 }
 

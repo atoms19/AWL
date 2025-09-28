@@ -1,5 +1,5 @@
 import type { Token } from "./lexer.ts"
-import type { BinaryExpression, Declaration, Expression, Program, Statement } from "./ast.ts"
+import type { BinaryExpression, Declaration, Expression, Identifier, Program, Statement } from "./ast.ts"
 import { debugMode } from "./main.ts";
 
 export function parse(tokens: Token[]) {
@@ -144,7 +144,17 @@ export function parse(tokens: Token[]) {
 				argument: parseUnaryExpression()
 			}
 		}
-		return parseBaseExpression()
+		return parseMemberExpression()
+	}
+
+	const parseMemberExpression = () => {
+		let exp = parseBaseExpression()
+		while (peek(0) && peek(0).type == "openingsquarebracket") {
+			exp = parseIndexing(exp)
+		}
+
+		return exp;
+
 	}
 
 	const parseFunctionCall = () => {
@@ -219,6 +229,46 @@ export function parse(tokens: Token[]) {
 			}
 		}
 		return block
+	}
+
+	const parseIndexing = (id): Expression => {
+		yum() //eat the opening square bracket
+		let startExpression = parseExpression()
+		let endExpression: Expression
+		let stepExpression: Expression
+		let next1 = peek(0)
+		if (next1.type == "operator" && next1.data == "->") {
+			yum() //eat the comma
+			endExpression = parseExpression()
+			let p = peek(0)
+			if ((p.type == "keyword" && p.data == "by")) {
+				yum() //eat the by keyword 
+				stepExpression = parseExpression()
+			}
+			yumButOnly("closingsquarebracket")
+		}
+		else if (next1.type == "closingsquarebracket") {
+			yum() //eat the closing bracket
+		}
+
+		if (endExpression!) {
+			return {
+				type: "MemberExpression",
+				operand: id,
+				property: startExpression,
+				isRange: {
+					end: endExpression,
+					step: stepExpression!
+				}
+			}
+		}
+
+		return {
+			type: "MemberExpression",
+			operand: id,
+			property: startExpression
+		}
+
 	}
 
 	//parse functions 
@@ -351,11 +401,11 @@ export function parse(tokens: Token[]) {
 
 	const parseReturnStatement = (): Statement => {
 		yum() // eat the return keyword 
-		let val =peek(0)
-		if(val.type=="closingcurlybracket"){
+		let val = peek(0)
+		if (val.type == "closingcurlybracket") {
 			return {
 				type: "ReturnStatement",
-				value:undefined
+				value: undefined
 			}
 		}
 		let exp = parseExpression()
@@ -365,44 +415,51 @@ export function parse(tokens: Token[]) {
 		}
 	}
 
-	const parseForLoop=():Statement=>{
-	 yum() //eat the for keyword
-	 yumButOnly("openingbracket")
-	 let iterator = peek(0) 
-	 if(iterator.type!="identifier"){
-		throwParserError("expected identifier as iterator variable")
-	 }
-	 yum() //eat the iterator
-	 let next = peek(0)
-	 if(!(next.type=="keyword" && next.data=="in")) {
-		throwParserError("expected 'in' keyword after iterator variable")
-	 }
-	 yum()	
-	 let startExpression=parseExpression()
-	 let endExpression:Expression
-    let next1=peek(0)
-	 if(next1.type=="operator" && next1.data=="->"){
-		yum() //eat the comma
-		endExpression = parseExpression()
-		yumButOnly("closingbracket")
-	 }
-	 else if(next1.type=="closingbracket"){
-		yum() //eat the closing bracket
-	 }
-	 yum() //eat the opening curly bracket
-	 let body = parseBlock()
-	 yum() //eat the closing curly bracket
-	 return {
-		type: "ForStatement",
-		iterator:{
-	 			type: "Identifier",
-			name: iterator.data
-		},
-		iterable: startExpression,
-		end: endExpression!,
-		body: body
-	 } 
-	 }
+	const parseForLoop = (): Statement => {
+		yum() //eat the for keyword
+		yumButOnly("openingbracket")
+		let iterator = peek(0)
+		if (iterator.type != "identifier") {
+			throwParserError("expected identifier as iterator variable")
+		}
+		yum() //eat the iterator
+		let next = peek(0)
+		if (!(next.type == "keyword" && next.data == "in")) {
+			throwParserError("expected 'in' keyword after iterator variable")
+		}
+		yum()
+		let startExpression = parseExpression()
+		let endExpression: Expression
+		let stepExpression: Expression
+		let next1 = peek(0)
+		if (next1.type == "operator" && next1.data == "->") {
+			yum() //eat the comma
+			endExpression = parseExpression()
+			let p = peek(0)
+			if ((p.type == "keyword" && p.data == "by")) {
+				yum() //eat the by keyword 
+				stepExpression = parseExpression()
+			}
+			yumButOnly("closingbracket")
+		}
+		else if (next1.type == "closingbracket") {
+			yum() //eat the closing bracket
+		}
+		yum() //eat the opening curly bracket
+		let body = parseBlock()
+		yum() //eat the closing curly bracket
+		return {
+			type: "ForStatement",
+			iterator: {
+				type: "Identifier",
+				name: iterator.data
+			},
+			iterable: startExpression,
+			end: endExpression!,
+			step: stepExpression!,
+			body: body
+		}
+	}
 
 	const parseBody = (token: Token): Statement | undefined => {
 		switch (token.type) {
@@ -422,13 +479,32 @@ export function parse(tokens: Token[]) {
 					case "return":
 						return parseReturnStatement()
 					case "for":
-						 return parseForLoop()
+						return parseForLoop()
 					default:
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}
 				break;
 			case "identifier":
-				if (peek(1) && peek(1).type == "assignment") {
+				if (peek(1) && peek(1).type == "openingsquarebracket") {
+					let id=yum()
+					
+					//eat the identifier
+					yumButOnly("openingsquarebracket")
+
+					let exp = parseMemberExpression()
+					yumButOnly("closingsquarebracket")
+					if (peek(0) && peek(0).type != "assignment") {
+					throwParserError("cannot assign to indexing expression")
+					}
+					yum() //eat the equal to sign
+					let value = parseExpression()
+					return {
+					  	type: "Assignment",
+						identifier:id.data, 
+						property:exp,
+						value: value
+					} 
+				}else if (peek(1) && peek(1).type == "assignment") {
 					return parseAssignment()
 				} else {
 					return parseExpression()
