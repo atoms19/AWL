@@ -101,6 +101,10 @@ const toString =(value)=>{
   }
 }
 
+const clock = () => {
+	return Date.now()
+}
+
 
 
 
@@ -108,6 +112,7 @@ const toString =(value)=>{
 
 export const standardFunctions = {
 	 "printOut":executeOutput,
+	 "clock":clock,
 	 "getInput":executeInput,
 	 "toInt":convertToInteger,
 	 "toFloat":convertToFloat,

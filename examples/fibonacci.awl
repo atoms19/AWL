@@ -1,0 +1,15 @@
+fun fib(n){
+  if ( n < 2){
+  return n
+  }
+  return fib(n-1) + fib(n-2)
+}
+
+
+# bench marking 
+let start = clock()
+let result = fib(20)
+let end = clock()
+let dur = end - start 
+printOut("the result is " + result)
+printOut("duration is : "+dur)

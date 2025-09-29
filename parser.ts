@@ -465,13 +465,13 @@ export function parse(tokens: Token[]) {
 		switch (token.type) {
 			case "keyword":
 				switch (token.data) {
-					case "declare":
+					case "let":
 						return parseDeclaration()
 					case "if":
 						return parseIfCondition()
 					case "while":
 						return parseWhileLoop()
-					case "define":
+					case "fun":
 						return parseFunctionDefinition()
 					case "break":
 					case "continue":
@@ -486,16 +486,11 @@ export function parse(tokens: Token[]) {
 				break;
 			case "identifier":
 				if (peek(1) && peek(1).type == "openingsquarebracket") {
-					let id=yum()
-					
+					let id=yum()	
 					//eat the identifier
 					yumButOnly("openingsquarebracket")
-
-					let exp = parseMemberExpression()
-					yumButOnly("closingsquarebracket")
-					if (peek(0) && peek(0).type != "assignment") {
-					throwParserError("cannot assign to indexing expression")
-					}
+					let exp = parseExpression()
+					yumButOnly("closingsquarebracket")	
 					yum() //eat the equal to sign
 					let value = parseExpression()
 					return {

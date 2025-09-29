@@ -1,6 +1,4 @@
-<h1 text-align="center">
 <img src="./assets/awl-transparent.png" alt="AWL Logo" width="200"/>
-<h1>
 
 # AWL 
 
@@ -44,11 +42,11 @@ printOut("Hello World")
 
 
 ### Variables in AWL
-variables are declared using the `declare` keyword 
+variables are declared using the `let` keyword 
 
 ```awl
-declare x = 10
-declare name = "vish"
+let x = 10
+let  name = "vish"
 ```
 variables are dynamically typed , you can reassign them as well
 
@@ -93,14 +91,14 @@ these are some of the builtin functions in awl
 string operations are expected to be done by converting them to array of characters
 
 #### user defined functions
-functions are declared using `define` keyword 
+functions are declared using `fun` keyword 
 once defined a function can be called using its `name()` just like in other languages 
 
 ```awl
-define add(a,b) {
+fun add(a,b) {
     return a + b
 }
-declare result = add(20, 10) 
+let result = add(20, 10) 
 printOut(result) // prints 30
 ```
 
@@ -113,20 +111,20 @@ only positional paramerters are supported as of now
 control flow in awl is done using `if` ,`while` and `for` keywords 
 
 ```awl
-declare x = 10
+let x = 10
 if (x > 5) {
     printOut("x is greater than 5")
 }else if (x == 5) {
     printOut("x is equal to 5")
 } 
-else {
+else{
     printOut("x is less than 5")
 }
 ```
 
 ```awl
-declare i = 0
-while (i < 10) {
+let i = 0
+while(i < 10) {
     printOut(i)
     i = i + 1
 }
@@ -195,7 +193,7 @@ for( i in 0 -> 1 by 0.1){
 you can also iterate over arrays using for loops 
 
 ```awl
-declare arr = [1,2,3,4,5]
+let arr = [1,2,3,4,5]
 for( item in arr) {
     printOut(item)
 }
@@ -204,7 +202,7 @@ for( item in arr) {
 string iterations are easier now 
 
 ```awl
-declare str = "hello"
+let str = "hello"
 for( char in toArray(str)) {
     printOut(char)
 }
@@ -217,28 +215,28 @@ for( char in toArray(str)) {
 arrays are declared using square brackets 
 
 ```awl
-declare arr = [1,2,3,4,5]
-declare strArr = ["hello", "world"]
+let arr = [1,2,3,4,5]
+let strArr = ["hello", "world"]
 ```
 
 arrays can hold mixed datatypes as well ,including other arrays 
 
 ```awl
-declare mixedArr = [1, "hello", 2.5, [1,2,3]]
+let mixedArr = [1, "hello", 2.5, [1,2,3]]
 ```
 
 arrays are dynamically sized , you can add or remove elements from them
 you can access the elements from an array at any index using `<array-name>[index]` 
 
 ```awl
-declare arr = [1,2,3,4,5]
+let arr = [1,2,3,4,5]
 printOut(arr[0]) #prints 1
 
 ```
 
 you can also modify the elements at any index the same way by assigning to an index
 ```awl
-declare arr = [1,2,3,4,5]
+let arr = [1,2,3,4,5]
 arr[0] = 10
 printOut(arr[0]) #prints 10
 ```
@@ -248,35 +246,35 @@ printOut(arr[0]) #prints 10
 arrays can be sliced using the same syntax we used in ranges 
 
 ```awl
-declare arr = [1,2,3,4,5]
-declare slicedArr = arr[1 -> 4] #slicedArr = [2,3]
+let arr = [1,2,3,4,5]
+let slicedArr = arr[1 -> 4] #slicedArr = [2,3]
 
 ```
 you can also specify step in slicing 
 ```awl
-declare arr = [1,2,3,4,5]
-declare slicedArr = arr[0 -> 5 by 2] #slicedArr = [1,3,5]
+let  arr = [1,2,3,4,5]
+let slicedArr = arr[0 -> 5 by 2] #slicedArr = [1,3,5]
 ```
 
 ### Strings in AWL
 strings are declared using double quotes 
 
 ```awl
-declare str = "hello world"
+let str = "hello world"
 ```
 
 strings can be concatenated using `+` operator 
 
 ```awl
-declare str1 = "hello"
-declare str2 = "world"
-declare str3 = str1 + " " + str2 #str3 = "hello world
+let str1 = "hello"
+let str2 = "world"
+let str3 = str1 + " " + str2 #str3 = "hello world
 ```
 
 strings can be accessed indexing just like arrays 
 
 ```awl
-declare str = "hello"
+let str = "hello"
 printOut(str[0]) #prints h
 ```
 
@@ -288,13 +286,13 @@ you can convert a string to an array of characters using `toArray()` function
 strings can be sliced using the same syntax we used in ranges 
 
 ```awl
-declare str = "hello world"
-declare slicedStr = str[0 -> 5] #slicedStr = "hello"
+let str = "hello world"
+let slicedStr = str[0 -> 5] #slicedStr = "hello"
 ```
 you can also specify step in slicing
 ```awl
-declare str = "hello world"
-declare slicedStr = str[0 -> 11 by 2] #slicedStr = "hlowrd"
+let str = "hello world"
+let slicedStr = str[0 -> 11 by 2] #slicedStr = "hlowrd"
 ```
 negative steps are supported for both array slicing as well as string slicing but awl does not have negative indexing 
 
