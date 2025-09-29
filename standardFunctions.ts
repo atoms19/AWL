@@ -5,6 +5,10 @@ const executeOutput = (...values) => {
   console.log(...values)
 }
 
+const executeInlineOutPut = (values:string) =>{
+  process.stdout.write(values)
+}
+
 
 const executeInput = async (...values) => {
 	let r = Readline.createInterface({
@@ -112,6 +116,7 @@ const clock = () => {
 
 export const standardFunctions = {
 	 "printOut":executeOutput,
+	 "printInline":executeInlineOutPut,
 	 "clock":clock,
 	 "getInput":executeInput,
 	 "toInt":convertToInteger,

@@ -1,17 +1,17 @@
 # implementing hashing algorithm in awl
-declare hashTable = []
-declare maxCapacity=16
-declare i =0 
+let hashTable = []
+let maxCapacity=16
+let i =0 
 while(i<maxCapacity){
   arrayInsert(hashTable,0)
   i=i+1
 }
 
-define hash(s){
-  declare h = 0
-  declare p = 31
-  declare st=toArray(s) 
-  declare i=0
+fun hash(s){
+   let h = 0
+  let  p = 31
+  let  st=toArray(s) 
+  let  i=0
   while( i < arrayLength(st)){
     h = h * p + toCharCode(arrayGet(i,st))
 	 i=i+1
@@ -19,14 +19,14 @@ define hash(s){
   return h
 }
 
-define hashTablePut(key,value){
+fun hashTablePut(key,value){
     printOut("recived "+key)
-    declare index =  hash(key) % maxCapacity
-	 arraySet(index,hashTable,value)
+    let  index =  hash(key) % maxCapacity
+	 hashTable[index] = value
 }
 
-define hashTableGet(key){
-	 return arrayGet(hash(key) % maxCapacity,hashTable)
+fun hashTableGet(key){
+	 return hashTable[hash(key) % maxCapacity]
 }
 
 hashTablePut("apple",42)

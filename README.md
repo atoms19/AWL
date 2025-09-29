@@ -40,6 +40,18 @@ stand out in a wierd way and some of it me just being wacky
 printOut("Hello World")
 ```
 
+printOut prints every line in a new line ,
+to avoid this behaviour you can use 
+
+printInline
+
+```awl
+printInline("Hello ")
+printInline("World")
+```
+
+this will be printed in the same line as "hello world" printInline is more primitvie than printOut and can only print one value at a time
+
 
 ### Variables in AWL
 variables are declared using the `let` keyword 
@@ -83,6 +95,7 @@ ooleans dont exist yet just use 0 and 1 for false and true
 these are some of the builtin functions in awl
 
 - `printOut(x)` : prints x to the console
+- `printInline(x)` : prints x to the console without a new line
 - `getInput(x)` : takes input from the user and returns it as a string, x is the prompt message 
 - `arrayLength(x)` : returns the length of x array
 - `arrayInsert(x, value)` : inserts value to the end of array x
@@ -109,6 +122,8 @@ only positional paramerters are supported as of now
 
 ### Control flow in AWL
 control flow in awl is done using `if` ,`while` and `for` keywords 
+all control statements can be followed by a block of code enclosed in `{}`
+or a single statement without `{}`
 
 ```rust
 let x = 10
@@ -130,8 +145,12 @@ while(i < 10) {
 }
 ```
 
-`break` can be used to exit a loop , its behaviour for nested loops might be broken
 
+```
+if(condition) printOut("single statement if")
+```
+
+`break` can be used to exit a loop , its behaviour for nested loops might be broken
 
 #### for loops 
 due to furstration of writing while loops i finally took my time to write for loops
@@ -345,8 +364,8 @@ and then run the following command to enable it
 
 
 - add proper support for break and continue statements
-- add indexing support for arrays as well as strings
-
+- add closures 
+- add support for structs
 
 awl is supposed to be a typesafe language but as of now it isnt
 i plan to add typesafety in the future 

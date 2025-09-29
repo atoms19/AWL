@@ -190,12 +190,29 @@ export function parse(tokens: Token[]) {
 		yumButOnly('openingbracket')
 		let expression = parseExpression();
 		yumButOnly('closingbracket')
-		let body = parseBlock()
+		let body: Statement[] = []
+		if (peek(0) && peek(0).type != "openingcurlybracket") {
+			let line = parseBody(peek(0))
+			if (line) {
+				body.push(line)
+			}
+		} else {
+			body = parseBlock()
+			yum() //eat the closing bracket 
+		}
 		let elseBody: Statement[] = []
-		yum()
+
 		if (peek(0) && peek(0).type == "keyword" && peek(0).data == "else") {
-			yum() //eat the else keyword	
-			elseBody = parseBlock()
+			yum() //eat the else keyword
+			if (peek(0) && peek(0).type != "openingcurlybracket") {
+				let line = parseBody(peek(0))
+				if (line) {
+					elseBody.push(line)
+				}
+			} else {
+				elseBody = parseBlock()
+				yum() //eat the closing bracket 
+			}
 		}
 		return {
 			type: 'IfStatement',
@@ -210,9 +227,16 @@ export function parse(tokens: Token[]) {
 		yumButOnly("openingbracket")
 		let expression = parseExpression()
 		yumButOnly("closingbracket")
-		yum()
-		let body = parseBlock()
-		yum()
+		let body: Statement[] = []
+		if (peek(0) && peek(0).type != "openingcurlybracket") {
+			let line = parseBody(peek(0))
+			if (line) {
+				body.push(line)
+			}
+		} else {
+			body = parseBlock()
+			yum()
+		}
 		return {
 			type: "WhileStatement",
 			condition: expression,
@@ -445,9 +469,15 @@ export function parse(tokens: Token[]) {
 		else if (next1.type == "closingbracket") {
 			yum() //eat the closing bracket
 		}
+		let body: Statement[] = []
+		if(peek(0) && peek(0).type != "openingcurlybracket"){
+		     let line = parseBody(peek(0))
+			  if(line) body.push(line)
+		}else{
 		yum() //eat the opening curly bracket
 		let body = parseBlock()
 		yum() //eat the closing curly bracket
+		}
 		return {
 			type: "ForStatement",
 			iterator: {
@@ -486,20 +516,20 @@ export function parse(tokens: Token[]) {
 				break;
 			case "identifier":
 				if (peek(1) && peek(1).type == "openingsquarebracket") {
-					let id=yum()	
+					let id = yum()
 					//eat the identifier
 					yumButOnly("openingsquarebracket")
 					let exp = parseExpression()
-					yumButOnly("closingsquarebracket")	
+					yumButOnly("closingsquarebracket")
 					yum() //eat the equal to sign
 					let value = parseExpression()
 					return {
-					  	type: "Assignment",
-						identifier:id.data, 
-						property:exp,
+						type: "Assignment",
+						identifier: id.data,
+						property: exp,
 						value: value
-					} 
-				}else if (peek(1) && peek(1).type == "assignment") {
+					}
+				} else if (peek(1) && peek(1).type == "assignment") {
 					return parseAssignment()
 				} else {
 					return parseExpression()
