@@ -41,6 +41,9 @@ export async function interpret(program: Program) {
 		} else if (val.type == "MemberExpression") {
 			let identifier = await interpretValue(val.operand, env)
 			let property = await interpretValue(val.property, env)
+			if(typeof property =="number" && property < 0){
+			  property = identifier.length + property
+		   }
 			if (!identifier[property]) {
 				throw new Error(`Interpretter Error : Property ${property} does not exist on ${identifier}`)
 			}

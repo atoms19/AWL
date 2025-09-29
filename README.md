@@ -94,7 +94,7 @@ string operations are expected to be done by converting them to array of charact
 functions are declared using `fun` keyword 
 once defined a function can be called using its `name()` just like in other languages 
 
-```awl
+```rust
 fun add(a,b) {
     return a + b
 }
@@ -110,7 +110,7 @@ only positional paramerters are supported as of now
 ### Control flow in AWL
 control flow in awl is done using `if` ,`while` and `for` keywords 
 
-```awl
+```rust
 let x = 10
 if (x > 5) {
     printOut("x is greater than 5")
@@ -122,7 +122,7 @@ else{
 }
 ```
 
-```awl
+```rust
 let i = 0
 while(i < 10) {
     printOut(i)
@@ -138,7 +138,7 @@ due to furstration of writing while loops i finally took my time to write for lo
 for loops in awl is super simple they support ranges 
 
 ##### ranges 
-```awl
+```rust
 for (i in 0 -> 10 ){
     printOut(i)
 }
@@ -146,7 +146,7 @@ for (i in 0 -> 10 ){
 the above loop will print numbers from 0 to 9
 
 ranges can also be descending
-```awl
+```rust
 for (i in 10 -> 0 ){
     printOut(i)
 }
@@ -156,7 +156,7 @@ the above loop will print numbers from 10 to 1
     
 ranges can also be return values of functions 
 
-```awl
+```rust
 for( i in  0 -> arrayLength(arr)){
     printOut(arrayGet(i, arr))
 }
@@ -165,7 +165,7 @@ for( i in  0 -> arrayLength(arr)){
 
 you can also specify step in ranges using `by` keyword after the end value of the range 
 
-```awl
+```rust
 for( i in 0 -> 10 by 2){
     printOut(i)
 } 
@@ -173,7 +173,7 @@ for( i in 0 -> 10 by 2){
 
 ranges can be negative as well 
 
-```awl
+```rust
 for( i in 10 -> 0 by -2){
 
     printOut(i)
@@ -181,7 +181,7 @@ for( i in 10 -> 0 by -2){
 ```
 floating point steps are supported as well 
 
-```awl
+```rust
 for( i in 0 -> 1 by 0.1){
     printOut(i)
 }
@@ -192,7 +192,7 @@ for( i in 0 -> 1 by 0.1){
 ##### iterators 
 you can also iterate over arrays using for loops 
 
-```awl
+```rust
 let arr = [1,2,3,4,5]
 for( item in arr) {
     printOut(item)
@@ -201,7 +201,7 @@ for( item in arr) {
 
 string iterations are easier now 
 
-```awl
+```rust
 let str = "hello"
 for( char in toArray(str)) {
     printOut(char)
@@ -214,14 +214,14 @@ for( char in toArray(str)) {
 
 arrays are declared using square brackets 
 
-```awl
+```rust
 let arr = [1,2,3,4,5]
 let strArr = ["hello", "world"]
 ```
 
 arrays can hold mixed datatypes as well ,including other arrays 
 
-```awl
+```rust
 let mixedArr = [1, "hello", 2.5, [1,2,3]]
 ```
 
@@ -239,6 +239,13 @@ you can also modify the elements at any index the same way by assigning to an in
 let arr = [1,2,3,4,5]
 arr[0] = 10
 printOut(arr[0]) #prints 10
+```
+
+
+arrays also support negative indexing just like in python 
+```awl
+let arr = [1,2,3,4,5]
+printOut(arr[-1]) #prints 5
 ```
 
 #### array slicing 
@@ -259,13 +266,13 @@ let slicedArr = arr[0 -> 5 by 2] #slicedArr = [1,3,5]
 ### Strings in AWL
 strings are declared using double quotes 
 
-```awl
+```rust
 let str = "hello world"
 ```
 
 strings can be concatenated using `+` operator 
 
-```awl
+```rust
 let str1 = "hello"
 let str2 = "world"
 let str3 = str1 + " " + str2 #str3 = "hello world
@@ -273,7 +280,7 @@ let str3 = str1 + " " + str2 #str3 = "hello world
 
 strings can be accessed indexing just like arrays 
 
-```awl
+```rust
 let str = "hello"
 printOut(str[0]) #prints h
 ```
@@ -285,12 +292,12 @@ you can convert a string to an array of characters using `toArray()` function
 #### string slicing 
 strings can be sliced using the same syntax we used in ranges 
 
-```awl
+```rust
 let str = "hello world"
 let slicedStr = str[0 -> 5] #slicedStr = "hello"
 ```
 you can also specify step in slicing
-```awl
+```rust
 let str = "hello world"
 let slicedStr = str[0 -> 11 by 2] #slicedStr = "hlowrd"
 ```
