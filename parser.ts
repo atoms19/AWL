@@ -306,7 +306,20 @@ export function parse(tokens: Token[]) {
 				type: 'Identifier',
 				name: yum().data
 			}
-		} else if (tk.type == "numericliteral") {
+		}else if (tk.type=="keyword" && (tk.data=="true" || tk.data=="false")){
+		  	 return {
+				type: 'BooleanLiteral',
+				value: (yum().data=="true")? true:false
+			}
+
+		}else if(tk.type=="keyword" && tk.data=="null"){
+		  	 yum()
+			 return {
+				type: 'NullLiteral',
+			}
+
+
+		}else if (tk.type == "numericliteral") {
 			return {
 				type: 'NumericLiteral',
 				value: (peek(0).data.includes('.')) ? parseFloat(yum().data) : parseInt(yum().data)

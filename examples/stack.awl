@@ -1,7 +1,7 @@
-declare stack = []
-declare maxLen = 10
+let stack = []
+let maxLen = 10
 
-define pushStack(){
+fun pushStack(){
   if(arrayLength(stack) < maxLen){
   arrayInsert(stack,toInt(getInput("enter the number to insert : ")))
   }else{
@@ -9,17 +9,17 @@ define pushStack(){
   }
 }
 
-define popStack(){
+fun popStack(){
   if(arrayLength(stack) != 0 ){
-		declare temp = stack[arrayLength(stack)-1]
+		let temp = stack[arrayLength(stack)-1]
 		printOut(" the element "+temp+" was popped ")
 		arrayRemoveAt(arrayLength(stack)-1,stack)
 		stack->stack[arrayLength(stack) -1 ]
   }
 }
 
-define displayStack(){
-  declare i =0
+ fun displayStack(){
+   let  i =0
   while( i < arrayLength(stack)){
       printOut(stack[i]+",")
 		i=i+1
@@ -27,15 +27,15 @@ define displayStack(){
 }
 
 
-define main(){
+fun main(){
 
-declare isRunning = 1
+let isRunning = 1
 	 while(isRunning){
 			 printOut("1) insert into the stack")
 			 printOut("2) pop from the stack ")
 			 printOut("3) display the stack")
 			 printOut("3) exit ")
-			 declare opt = toInt(getInput("enter the option :" ))
+			 let  opt = toInt(getInput("enter the option :" ))
 			 if(opt==1){
 				  pushStack()
 			 }else if(opt == 2){

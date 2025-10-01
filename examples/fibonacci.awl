@@ -7,9 +7,9 @@ fun fib(n){
 
 
 # bench marking 
-let start = clock()
+let start = getTime()
 let result = fib(20)
-let end = clock()
+let end = getTime()
 let dur = end - start 
 printOut("the result is " + result)
 printOut("duration is : "+dur)

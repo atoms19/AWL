@@ -1,4 +1,4 @@
-eeport type Expression = BinaryExpression | UnaryExpression | NumericLiteral | FunctionCall | MemberExpression 
+export type Expression = BinaryExpression | UnaryExpression | NumericLiteral | FunctionCall | MemberExpression 
 
 export interface ExpressionStatement{
   type:'ExpressionStatement',
@@ -26,6 +26,16 @@ export interface FunctionCall {
 export interface NumericLiteral{
   type:'NumericLiteral'
   value:number 
+}
+
+export interface NullLiteral{
+  type:'NullLiteral'
+}
+
+
+export interface BooleanLiteral {
+  type:'BooleanLiteral'
+  value: boolean
 }
 
 

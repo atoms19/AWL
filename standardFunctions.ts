@@ -117,7 +117,7 @@ const clock = () => {
 export const standardFunctions = {
 	 "printOut":executeOutput,
 	 "printInline":executeInlineOutPut,
-	 "clock":clock,
+	 "getTime":clock,
 	 "getInput":executeInput,
 	 "toInt":convertToInteger,
 	 "toFloat":convertToFloat,

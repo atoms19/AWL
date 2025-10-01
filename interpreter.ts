@@ -30,7 +30,10 @@ export async function interpret(program: Program) {
 		}
 		else if (val.type == "NumericLiteral") {
 			return val.value
-		} else if (val.type == "StringLiteral") {
+		}else if(val.type=="NullLiteral"){ 
+		  return null
+		}
+		else if (val.type == "StringLiteral") {
 			return val.value;
 		} else if (val.type == "ArrayLiteral") {
 			let arr = val.elements.map((el) => interpretValue(el, env))
@@ -38,7 +41,9 @@ export async function interpret(program: Program) {
 		} else if (val.type == "Identifier") {
 			if (debugMode) console.log(val.name, env, env.get(val.name))
 			return env.get(val.name)
-		} else if (val.type == "MemberExpression") {
+		}else if (val.type == "BooleanLiteral") { 
+		  			return val.value ? true : false
+		}else if (val.type == "MemberExpression") {
 			let identifier = await interpretValue(val.operand, env)
 			let property = await interpretValue(val.property, env)
 			if(typeof property =="number" && property < 0){
@@ -109,23 +114,23 @@ export async function interpret(program: Program) {
 			case '%':
 				return left % right;
 			case '&&':
-				if (left && right) return 1
-				return 0;
+				if (left && right) return true
+				return false;
 			case '||':
-				if (left || right) return 1
-				return 0;
+				if (left || right) return true 
+				return false;
 			case '==':
-				return (left == right) ? 1 : 0;
+				return (left == right);
 			case '!=':
-				return (left != right) ? 1 : 0;
+				return (left != right);
 			case '>':
-				return (left > right) ? 1 : 0;
+				return (left > right);
 			case '<':
-				return (left < right) ? 1 : 0;
+				return (left < right);
 			case '>=':
-				return (left >= right) ? 1 : 0;
+				return (left >= right) ;
 			case '<=':
-				return (left <= right) ? 1 : 0;
+				return (left <= right);
 
 		}
 	}
@@ -160,12 +165,14 @@ export async function interpret(program: Program) {
 				}
 			} catch (e: any) {
 				if (e instanceof ReturnEventError) {
-					return e.val
+				   return e.val
 				}
 			}
 		} else {
 			console.log(`Interpretter error : ${f.callee.name} is not a function`)
 		}
+
+		return null
 
 	}
 
