@@ -306,20 +306,20 @@ export function parse(tokens: Token[]) {
 				type: 'Identifier',
 				name: yum().data
 			}
-		}else if (tk.type=="keyword" && (tk.data=="true" || tk.data=="false")){
-		  	 return {
+		} else if (tk.type == "keyword" && (tk.data == "true" || tk.data == "false")) {
+			return {
 				type: 'BooleanLiteral',
-				value: (yum().data=="true")? true:false
+				value: (yum().data == "true") ? true : false
 			}
 
-		}else if(tk.type=="keyword" && tk.data=="null"){
-		  	 yum()
-			 return {
+		} else if (tk.type == "keyword" && tk.data == "null") {
+			yum()
+			return {
 				type: 'NullLiteral',
 			}
 
 
-		}else if (tk.type == "numericliteral") {
+		} else if (tk.type == "numericliteral") {
 			return {
 				type: 'NumericLiteral',
 				value: (peek(0).data.includes('.')) ? parseFloat(yum().data) : parseInt(yum().data)
@@ -483,13 +483,13 @@ export function parse(tokens: Token[]) {
 			yum() //eat the closing bracket
 		}
 		let body: Statement[] = []
-		if(peek(0) && peek(0).type != "openingcurlybracket"){
-		     let line = parseBody(peek(0))
-			  if(line) body.push(line)
-		}else{
-		yum() //eat the opening curly bracket
-		let body = parseBlock()
-		yum() //eat the closing curly bracket
+		if (peek(0) && peek(0).type != "openingcurlybracket") {
+			let line = parseBody(peek(0))
+			if (line) body.push(line)
+		} else {
+			yum() //eat the opening curly bracket
+			 body = parseBlock()
+			yum() //eat the closing curly bracket
 		}
 		return {
 			type: "ForStatement",
@@ -504,6 +504,30 @@ export function parse(tokens: Token[]) {
 		}
 	}
 
+	const parseSelfAssignment = (operator: string): Statement => {
+		let id = yum() // eat the identifier 
+		if (peek(0) && peek(0).type == "keyword" && peek(0).data == "by") {
+			yum() //eat the by keyword
+		} else {
+			throwParserError("expected 'by' keyword after self assignment operator")
+		}
+		let increment = parseExpression()
+		return {
+			type: "Assignment",
+			identifier: id.data,
+			value: {
+				type: "BinaryExpression",
+				operator: operator,
+				left: {
+					type: "Identifier",
+					name: id.data
+				},
+				right: increment
+			}
+		}
+
+
+	}
 	const parseBody = (token: Token): Statement | undefined => {
 		switch (token.type) {
 			case "keyword":
@@ -527,7 +551,7 @@ export function parse(tokens: Token[]) {
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}
 				break;
-			case "identifier":
+			 case "identifier":
 				if (peek(1) && peek(1).type == "openingsquarebracket") {
 					let id = yum()
 					//eat the identifier
@@ -551,6 +575,7 @@ export function parse(tokens: Token[]) {
 			case "closingcurlybracket":
 				yum()
 				return undefined
+
 			default:
 				return parseExpression()
 		}

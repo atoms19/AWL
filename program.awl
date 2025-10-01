@@ -1,11 +1,12 @@
 let isSingle = "awishal"
 let isNotSingle = "vishal"
 
-let v =null
-fun thisOneDOesntReturnAnything(){
-	printOut("this function does not return anything")
+for(i in 0->10){
+         printOut(i)
+			if(i==5){
+				break
+			}
 }
-
 
 
 

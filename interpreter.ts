@@ -12,6 +12,21 @@ class ReturnEventError extends Error {
 	}
 }
 
+class BreakEventError extends Error {
+	constructor(message: string) {
+		super(message)
+		this.name = "BreakEventError"
+	}
+}
+
+class ContinueEventError extends Error {
+	constructor(message: string) {
+		super(message)
+		this.name = "ContinueEventError"
+	}
+}
+
+
 
 export async function interpret(program: Program) {
 
@@ -30,8 +45,8 @@ export async function interpret(program: Program) {
 		}
 		else if (val.type == "NumericLiteral") {
 			return val.value
-		}else if(val.type=="NullLiteral"){ 
-		  return null
+		} else if (val.type == "NullLiteral") {
+			return null
 		}
 		else if (val.type == "StringLiteral") {
 			return val.value;
@@ -41,14 +56,14 @@ export async function interpret(program: Program) {
 		} else if (val.type == "Identifier") {
 			if (debugMode) console.log(val.name, env, env.get(val.name))
 			return env.get(val.name)
-		}else if (val.type == "BooleanLiteral") { 
-		  			return val.value ? true : false
-		}else if (val.type == "MemberExpression") {
+		} else if (val.type == "BooleanLiteral") {
+			return val.value ? true : false
+		} else if (val.type == "MemberExpression") {
 			let identifier = await interpretValue(val.operand, env)
 			let property = await interpretValue(val.property, env)
-			if(typeof property =="number" && property < 0){
-			  property = identifier.length + property
-		   }
+			if (typeof property == "number" && property < 0) {
+				property = identifier.length + property
+			}
 			if (!identifier[property]) {
 				throw new Error(`Interpretter Error : Property ${property} does not exist on ${identifier}`)
 			}
@@ -64,11 +79,11 @@ export async function interpret(program: Program) {
 					}
 					return false;
 				}
-				for (let i = property; comparisonFn(i,end); i += step) {
+				for (let i = property; comparisonFn(i, end); i += step) {
 					range.push(identifier[i])
 				}
-				if(typeof identifier=="string"){
-								return range.join("")
+				if (typeof identifier == "string") {
+					return range.join("")
 				}
 
 				return range;
@@ -117,7 +132,7 @@ export async function interpret(program: Program) {
 				if (left && right) return true
 				return false;
 			case '||':
-				if (left || right) return true 
+				if (left || right) return true
 				return false;
 			case '==':
 				return (left == right);
@@ -128,7 +143,7 @@ export async function interpret(program: Program) {
 			case '<':
 				return (left < right);
 			case '>=':
-				return (left >= right) ;
+				return (left >= right);
 			case '<=':
 				return (left <= right);
 
@@ -165,7 +180,7 @@ export async function interpret(program: Program) {
 				}
 			} catch (e: any) {
 				if (e instanceof ReturnEventError) {
-				   return e.val
+					return e.val
 				}
 			}
 		} else {
@@ -180,11 +195,11 @@ export async function interpret(program: Program) {
 		let v = await interpretValue(d.value, env)
 		let prop = d.property ? await interpretValue(d.property, env) : null
 		if (prop) {
-				  let obj = env.get(d.identifier)
-				  obj[prop] = v
-				  env.set(d.identifier, obj)
-				  return
-	 }
+			let obj = env.get(d.identifier)
+			obj[prop] = v
+			env.set(d.identifier, obj)
+			return
+		}
 		env.set(d.identifier, v)
 	}
 
@@ -203,15 +218,30 @@ export async function interpret(program: Program) {
 	}
 
 
-	let broken = false
 	const interpretWhileStatement = async (statement: WhileStatement, env: Environment) => {
 		let scope = new Environment(env)
-		while (await interpretValue(statement.condition, env) && !broken) {
-			for (const stmt of statement.body) {
-				await interpretBody(stmt, scope)
+		try {
+		while (await interpretValue(statement.condition, env)) {
+			try {
+				for (const stmt of statement.body) {
+					await interpretBody(stmt, scope)
+				}
+			} catch (e) {
+				if (e instanceof BreakEventError) {
+					throw e
+
+				}
+				if (e instanceof ContinueEventError) {
+					continue
+				}
 			}
 		}
-		broken = false
+		}catch(e){
+			if(e instanceof BreakEventError){
+				return e
+			}
+
+		}
 	}
 
 	const interpretForStatement = async (statement: Statement, env: Environment) => {
@@ -230,25 +260,54 @@ export async function interpret(program: Program) {
 				return false;
 			}
 
-			for (let i = start; comparisonFn(i, end) && !broken; i += step) {
-				scope.define(statement.iterator.name, i)
-				for (const stmt of statement.body) {
-					await interpretBody(stmt, scope)
+			try {
+				for (let i = start; comparisonFn(i, end); i += step) {
+					scope.define(statement.iterator.name, i)
+					try {
+						for (const stmt of statement.body) {
+							await interpretBody(stmt, scope)
+						}
+					} catch (e) {
+						if (e instanceof BreakEventError) {
+							throw e
+						}
+						if (e instanceof ContinueEventError) {
+							continue
+						}
+					}
+				}
+			} catch (e) {
+				if (e instanceof BreakEventError) {
+					return e
 				}
 			}
+
 		} else {
 			let iterable = await interpretValue(statement.iterable, env)
 			if (!Array.isArray(iterable)) throw new Error("Not an array")
-			for (const item of iterable) {
-				if (broken) break
-				scope.define(statement.iterator.name, item)
-				for (const stmt of statement.body) {
-					await interpretBody(stmt, scope)
+			try {
+				for (const item of iterable) {
+					scope.define(statement.iterator.name, item)
+					try {
+						for (const stmt of statement.body) {
+							await interpretBody(stmt, scope)
+						}
+					} catch (e) {
+						if (e instanceof BreakEventError) {
+							return e
+						}
+						if (e instanceof ContinueEventError) {
+							continue
+						}
+					}
+				}
+			} catch (e) {
+				if (e instanceof BreakEventError) {
+					return e
 				}
 			}
-			broken = false
-		}
 
+		}
 	}
 
 	const interpretBody = async (statement: Statement, env: Environment) => {
@@ -266,9 +325,9 @@ export async function interpret(program: Program) {
 			await interpretForStatement(statement, env)
 
 		} else if (statement.type == "ControlFlowStatement" && statement.keyword == "break") {
-			broken = true
+			throw new BreakEventError("Break statement encountered")
 		} else if (statement.type == "ControlFlowStatement" && statement.keyword == "continue") {
-
+			throw new ContinueEventError("Continue statement encountered")
 		} else if (statement.type == "ReturnStatement") {
 			let v = await interpretValue(statement.value, env)
 			throw new ReturnEventError("Return statement encountered", v)

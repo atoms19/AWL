@@ -87,7 +87,12 @@ this is a multi line comment
 ###
 ```
 
-ooleans dont exist yet just use 0 and 1 for false and true
+### Data types in AWL
+- Numeric : represents both integers and floating point numbers
+- String : represents a sequence of characters or a single character
+- Array : represents a collection of values, can hold mixed datatypes including other arrays
+- Boolean : represents true or false values
+- Null : represents a null value
 
 ### Functions in AWL
 
@@ -363,9 +368,10 @@ and then run the following command to enable it
 ## Future Plans
 
 
-- add proper support for break and continue statements
 - add closures 
 - add support for structs
+- add biterary operations
+
 
 awl is supposed to be a typesafe language but as of now it isnt
 i plan to add typesafety in the future 
