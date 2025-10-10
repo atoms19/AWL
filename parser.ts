@@ -31,6 +31,29 @@ export function parse(tokens: Token[]) {
 
 	}
 
+	let parseStructDeclaration = (): Statement => {
+	 yum() //eat the struct keyword
+
+	 let structName = peek(0);
+	 if(structName.type != "identifier"){
+		throwParserError("expected identifier as struct name")
+	 }
+	 yum() //eat the struct name
+	 yumButOnly("openingcurlybracket")
+	 let fields: Declaration[] = []
+	 while(peek(0) && peek(0).type != "closingcurlybracket"){
+	 let field = parseDeclaration()	
+	 if(field && field.type == "Declaration"){
+		fields.push(field)
+	 }
+	}
+	  return {
+		type: "StructDeclaration",
+		name: structName.data,
+		fields: fields,
+     }
+  }
+
 	const parseExpression = () => {
 		return parse7Expression()
 	}
@@ -372,6 +395,17 @@ export function parse(tokens: Token[]) {
 			let asg = peek(0)
 			if (asg.type == "assignment") {
 				yum() //eating the equaltosign
+				if(peek(0) && peek(0).type =="keyword" && peek(0).data=="new") {
+				  yum()
+				  let structName = yum()
+				  if(structName.type!="identifier") throwParserError("new can only be used to create new instances of structs")
+				  return {
+					 type:"Instanciation",
+					 identifier:idf.data,
+					 structName:structName.data,
+				  }
+				}
+
 				return {
 					type: 'Declaration',
 					identifier: idf.data,
@@ -547,6 +581,8 @@ export function parse(tokens: Token[]) {
 						return parseReturnStatement()
 					case "for":
 						return parseForLoop()
+				   case "struct":
+					    return parseStructDeclaration();
 					default:
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}

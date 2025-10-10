@@ -1,13 +1,29 @@
-let isSingle = "awishal"
-let isNotSingle = "vishal"
+let c = 3
+let n = 10
+let a =[570,247,598,639,609,609]
+
+
+let q = []
+let f = []  # front index 
+let r = []  # rear index
+
 
 for(i in 0->10){
-         printOut(i)
-			if(i==5){
-				break
-			}
+   arrayInsert(q,[])
 }
 
+for(i in 0-> c){
+	 for( j in 0 -> arrayLength(a) ){
+		  let x =toInt(toString(a[j])[i]) 
+		  arrayInsert(q[x],a[j])
+  	 }
+	 for( k in 0 ->arrayLength(q)){
+      y=dequeu(Qk)
+		 insert(q[x],y)
+	 }
+}
 
-
+let s =q[0]
+s[0]=10000
+printOut(q)
 

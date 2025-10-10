@@ -106,8 +106,20 @@ export interface ReturnStatement{
   type:'ReturnStatement',
   value?:Expression
 }
+
+export interface StructDeclaration {
+  type: 'StructDeclaration',
+  name: string,
+  fields:Statement[]
+}
+
+export interface Instanciation{
+type : 'Instanciation',
+structName : string,
+identifier:string 
+}
   
-export type Statement = Declaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition | ControFlowStatement | ReturnStatement | ForStatement
+export type Statement = Declaration | StructDeclaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition | ControFlowStatement | ReturnStatement | ForStatement  | Instanciation
 
 export interface Program{
   type:'Program',

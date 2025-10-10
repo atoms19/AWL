@@ -19,17 +19,17 @@ export class Environment {
 			this.memory.set(key, value)
 		} else {
 			let p = this.parent
-			let found =false
+			let found = false
 			while (p) {
 				if (p.memory.has(key)) {
 					p.memory.set(key, value)
-					found=true
+					found = true
 				}
 				p = p.parent
 			}
-			if(!found){
-			  throw new Error("Interpretter Error: trying to reassign an undeclared variable "+key)
-			 }
+			if (!found) {
+				throw new Error("Interpretter Error: trying to reassign an undeclared variable " + key)
+			}
 		}
 	}
 
@@ -44,11 +44,19 @@ export class Environment {
 				}
 				p = p.parent
 			}
-
-			
-
-	//	throw new Error("Interpretter error :"+value +"is not declared")
 		}
+	}
+
+	record() {
+		let obj = Object.create(null)
+		for (let [key, value] of this.memory) {
+			if (value instanceof Environment) {
+				obj[key] = value.record()
+			} else {
+				obj[key] = value
+			}
+		}
+		return obj
 	}
 }
 

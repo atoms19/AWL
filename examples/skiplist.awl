@@ -1,0 +1,21 @@
+
+
+struct student {
+  let name = null 
+  let marks = null 
+  let registered = null 
+}
+
+let Students = []
+let n = toInt(getInput("enter the number of students :"))
+for( i in 0 -> n ){
+   printOut("entering the "+i+"th student's name :")
+   let st= new student
+   st["name"] = getInput("enter the name of the student :")	
+	st["marks"]= toInt(getInput("enter the marks of student out of 100 :"))
+	arrayInsert(Students,st)
+}
+
+
+printOut(Students)
+

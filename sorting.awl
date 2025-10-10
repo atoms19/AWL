@@ -1,7 +1,5 @@
-# insertion sort 
-# awl esq 1
-#
-#####
+# fun awl program 
+
 fun insertionSort(array){
   for( i in 1->arrayLength(array)){
     let j= i-1
@@ -14,10 +12,12 @@ fun insertionSort(array){
   }
 }
 
-###########################
+let a = []
+insertionSort(a)
+printOut(a)
 
 
-
+# factorial 
 fun factorial(n){
     if( n == 0) return  1 
 	 return n*factorial(n-1)
