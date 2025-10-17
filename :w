@@ -33,71 +33,71 @@ export async function interpret(program: Program) {
 	const global = new Environment()
 
 	const interpretValue = async (val, env: Environment) => {
-		switch (val.type) {
-			case "BinaryExpression":
-				return await interpretBinaryExpression(val, env)
-			case "UnaryExpression":
-				return await interpretUnaryExpression(val, env)
-			case "FunctionCall":
-				return await interpretFunctionCall(val, env)
-			case "FunctionDefinition":
-				return await interpretFunctionDefinition(val)
-			case "NumericLiteral":
-				return val.value
-			case "NullLiteral":
-				return null
-			case "StringLiteral":
-				return val.value;
-			case "ArrayLiteral":
-				let arr = val.elements.map((el) => interpretValue(el, env))
-				return Promise.all(arr)
-			case "Identifier":
-				return env.get(val.name)
-			case "BooleanLiteral":
-				return val.value ? true : false
-			case "MemberExpression":
-				return await interpretMemberExpression(val, env)
+	  switch(val.type){
+		case "BinaryExpression":
+			return await interpretBinaryExpression(val, env)
+		case "UnaryExpression":
+			return await interpretUnaryExpression(val, env)
+		case "FunctionCall":
+			return await interpretFunctionCall(val, env)
+		case "FunctionDefinition":
+			return await interpretFunctionDefinition(val)
+		case "NumericLiteral":
+			return val.value
+		case "NullLiteral":
+			return null
+		case "StringLiteral":
+			return val.value;
+		case "ArrayLiteral":
+			let arr = val.elements.map((el) => interpretValue(el, env))
+			return Promise.all(arr)
+		case "Identifier":
+			return env.get(val.name)
+		case "BooleanLiteral":
+			return val.value ? true : false
+		case "MemberExpression":
+	       return await interpretMemberExpression(val, env)	
 		}
 
 	}
 
-	const interpretMemberExpression = async (val: MemberExpression, env: Environment) => {
+	const interpretMemberExpression = async (val:MemberExpression, env: Environment) => {
 		let identifier = await interpretValue(val.operand, env)
 		let property = await interpretValue(val.property, env)
+         
+			if (typeof property == "number" && property < 0) {
+				property = identifier.length + property
+			}
+			if (identifier[property]===undefined) {
+				throw new Error(`Interpretter Error : Property ${property} does not exist on ${identifier}`)
+			}
 
-		if (typeof property == "number" && property < 0) {
-			property = identifier.length + property
-		}
-		if (identifier[property] === undefined) {
-			throw new Error(`Interpretter Error : Property ${property} does not exist on ${identifier}`)
-		}
 
-
-		if (val.isRange) {
-			let end = await interpretValue(val.isRange.end, env)
-			let step = (val.isRange.step) ? (await interpretValue(val.isRange.step, env)) : ((property < end) ? 1 : -1)
-			let range: any[] = []
-			let comparisonFn = (index: number, end: number) => {
-				if (step > 0) {
-					return index < end
-				} else if (step < 0) {
-					return index > end
+			if (val.isRange) {
+				let end = await interpretValue(val.isRange.end, env)
+				let step = (val.isRange.step) ? (await interpretValue(val.isRange.step, env)) : ((property < end) ? 1 : -1)
+				let range: any[] = []
+				let comparisonFn = (index: number, end: number) => {
+					if (step > 0) {
+						return index < end
+					} else if (step < 0) {
+						return index > end
+					}
+					return false;
 				}
-				return false;
-			}
-			for (let i = property; comparisonFn(i, end); i += step) {
-				range.push(identifier[i])
-			}
-			if (typeof identifier == "string") {
-				return range.join("")
+				for (let i = property; comparisonFn(i, end); i += step) {
+					range.push(identifier[i])
+				}
+				if (typeof identifier == "string") {
+					return range.join("")
+				}
+
+				return range;
+
 			}
 
-			return range;
-
-		}
-
-		return identifier[property]
-	}
+			return identifier[property]
+  }
 	const interpretFunctionDefinition = async (fn: FunctionDefinition) => {
 		global.define(fn.name, fn)
 	}
@@ -161,15 +161,15 @@ export async function interpret(program: Program) {
 		if (debugMode) console.log(env, env.get(d.identifier))
 	}
 
-	const interpretInstantiation = async (d, env: Environment) => {
-		let structDef = global.get(d.structName)
-		if (!structDef) throw new Error(`Interpretter Error : Struct ${d.structName} is not defined`)
-		if (structDef.type != "StructDeclaration") throw new Error(`Interpretter Error : ${d.structName} is not a struct`)
+   const interpretInstantiation = async (d,env:Environment) =>{
+     let structDef = global.get(d.structName)
+	   if(!structDef) throw new Error(`Interpretter Error : Struct ${d.structName} is not defined`)
+		if(structDef.type != "StructDeclaration") throw new Error(`Interpretter Error : ${d.structName} is not a struct`)
 		let struct = new Environment()
-		for (const field of structDef.fields) {
-			await interpretDeclaration(field, struct)
+		for(const field of structDef.fields){
+					 await interpretDeclaration(field,struct)
 		}
-		env.define(d.identifier, struct.record())
+		env.define(d.identifier,struct.record())
 	}
 
 	const interpretFunctionCall = async (f: FunctionCall, env: Environment) => {
@@ -207,31 +207,17 @@ export async function interpret(program: Program) {
 
 	const interpretAssignment = async (d, env: Environment) => {
 		let v = await interpretValue(d.value, env)
-		if (d.target.type == "Identifier") {
-			env.set(d.target.name, v)
-		} else if (d.target.type == "MemberExpression") {
-			let obj = d.target.operand
-			if(debugMode) console.log("Assigning to member expression ", d.target)
-			while(obj.type == "MemberExpression") {
-				obj = obj.operand
-			}
-			let base = await interpretValue(obj, env)
-			let rbase:any;
-			if(debugMode) console.log("Base object ", base)
-		   if(debugMode) console.log("Target property ", d.target.property)
-		   let current = d.target
-	       while(current.type=="MemberExpression"){
-			   let prop = await interpretValue(current.property, env)
-				if(debugMode) console.log("Current property ", prop)
-				
-				rbase = base[prop]
-				if(debugMode) console.log("Current base ", rbase)
-			  current = current.operand
-			 }
-
-			 if(debugMode) console.log("Final base ", rbase,current)
-			 rbase[await interpretValue(d.target.property, env)] = v
-		}
+		if(d.target.type=="Identifier"){
+		env.set(d.target.name, v)
+	 }else if(d.target.type=="MemberExpression"){
+	 let obj = await interpretValue(d.target.operand, env)
+	 let property = await interpretValue(d.target.property, env)
+	 if(typeof property=="number" && property<0){
+		property = obj.length + property
+	 }
+	 obj[property] = v
+	 env.set(d.target.operand.name, obj)
+	 }
 	}
 
 	const interpretIfStatenmet = async (statement: IfStatement, env: Environment) => {
@@ -252,23 +238,23 @@ export async function interpret(program: Program) {
 	const interpretWhileStatement = async (statement: WhileStatement, env: Environment) => {
 		let scope = new Environment(env)
 		try {
-			while (await interpretValue(statement.condition, env)) {
-				try {
-					for (const stmt of statement.body) {
-						await interpretBody(stmt, scope)
-					}
-				} catch (e) {
-					if (e instanceof BreakEventError) {
-						throw e
+		while (await interpretValue(statement.condition, env)) {
+			try {
+				for (const stmt of statement.body) {
+					await interpretBody(stmt, scope)
+				}
+			} catch (e) {
+				if (e instanceof BreakEventError) {
+					throw e
 
-					}
-					if (e instanceof ContinueEventError) {
-						continue
-					}
+				}
+				if (e instanceof ContinueEventError) {
+					continue
 				}
 			}
-		} catch (e) {
-			if (e instanceof BreakEventError) {
+		}
+		}catch(e){
+			if(e instanceof BreakEventError){
 				return e
 			}
 
@@ -362,11 +348,11 @@ export async function interpret(program: Program) {
 		} else if (statement.type == "ReturnStatement") {
 			let v = await interpretValue(statement.value, env)
 			throw new ReturnEventError("Return statement encountered", v)
-		} else if (statement.type == "StructDeclaration") {
-			if (debugMode) console.log("Defining struct ", statement.name)
+		}else if (statement.type == "StructDeclaration") {
+		   if(debugMode)console.log("Defining struct ",statement.name)
 			global.define(statement.name, statement);
-		} else if (statement.type == "Instanciation") {
-			await interpretInstantiation(statement, env)
+		}else if(statement.type == "Instanciation"){
+			 await interpretInstantiation(statement,env)
 		}
 		else {
 			await interpretValue(statement, env)

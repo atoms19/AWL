@@ -4,7 +4,6 @@ struct student {
   let name = null 
   let marks = null 
   let registered = null 
-
 }
 
 let Students = []
@@ -18,12 +17,3 @@ for( i in 0 -> n ){
 }
 printOut(Students[0]["name"])
 printOut(Students)
-Students[0]["name"]="vishal"
-
-{
-  
-
-
-}
-
-let n= new student

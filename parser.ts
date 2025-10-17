@@ -175,9 +175,7 @@ export function parse(tokens: Token[]) {
 		while (peek(0) && peek(0).type == "openingsquarebracket") {
 			exp = parseIndexing(exp)
 		}
-
 		return exp;
-
 	}
 
 	const parseFunctionCall = () => {
@@ -420,13 +418,36 @@ export function parse(tokens: Token[]) {
 
 	}
 
-	const parseAssignment = (): Statement => {
+	const parseIdentifier = (): Statement => {
+  
+			if (peek(1) && peek(1).type == "openingsquarebracket"){
+			    let value = parseMemberExpression()
+				 yum()
+				 let exp= parseExpression()
+  				 return {
+				   type:"Assignment",
+				   target:value,
+				   value:exp
+				 }
+
+			}else if (peek(1) && peek(1).type == "assignment") {
+						return parseAssignment()
+
+		   }else {
+			  return parseExpression()
+			 }
+}
+
+
+	const parseAssignment = (): Statement => {		
 		const varname = yum() //eating the identifier
 		yum() // eating the equal to sign 
-
 		return {
 			type: 'Assignment',
-			identifier: varname.data,
+			target: {
+						type: 'Identifier',
+						name: varname.data
+			} as Identifier,
 			value: parseExpression()
 		}
 	}
@@ -588,25 +609,7 @@ export function parse(tokens: Token[]) {
 				}
 				break;
 			 case "identifier":
-				if (peek(1) && peek(1).type == "openingsquarebracket") {
-					let id = yum()
-					//eat the identifier
-					yumButOnly("openingsquarebracket")
-					let exp = parseExpression()
-					yumButOnly("closingsquarebracket")
-					yum() //eat the equal to sign
-					let value = parseExpression()
-					return {
-						type: "Assignment",
-						identifier: id.data,
-						property: exp,
-						value: value
-					}
-				} else if (peek(1) && peek(1).type == "assignment") {
-					return parseAssignment()
-				} else {
-					return parseExpression()
-				}
+			     return parseIdentifier()	
 			case "openingcurlybracket":
 			case "closingcurlybracket":
 				yum()

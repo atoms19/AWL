@@ -1,29 +1,11 @@
-let c = 3
-let n = 10
-let a =[570,247,598,639,609,609]
+let array = [1,2,[[9,0],2],4,5,67]
+printOut(array)
+
+array[2][0][0][0]=2
 
 
-let q = []
-let f = []  # front index 
-let r = []  # rear index
+printOut(array)
 
-
-for(i in 0->10){
-   arrayInsert(q,[])
-}
-
-for(i in 0-> c){
-	 for( j in 0 -> arrayLength(a) ){
-		  let x =toInt(toString(a[j])[i]) 
-		  arrayInsert(q[x],a[j])
-  	 }
-	 for( k in 0 ->arrayLength(q)){
-      y=dequeu(Qk)
-		 insert(q[x],y)
-	 }
-}
-
-let s =q[0]
-s[0]=10000
-printOut(q)
-
+# outreach 
+# cal.com
+# sorta

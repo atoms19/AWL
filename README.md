@@ -33,11 +33,7 @@ its that easy youll see the output
 
 ### Hello world in AWL 
 
-some of the awl syntax feels less in line with other languages and thats intentional to make it
-stand out in a wierd way and some of it me just being wacky 
-
-```awl
-printOut("Hello World")
+some of the awl syntax feels less in line with other languages and thats intentional to make it stand out in a wierd way and some of it me just being wacky ```awl printOut("Hello World")
 ```
 
 printOut prints every line in a new line ,
@@ -107,6 +103,8 @@ these are some of the builtin functions in awl
 - `arrayInsertAt(index, value, x)` : inserts value at index of array x
 - `arrayRemoveAt(index, x)` : removes the element at index from array x
 string operations are expected to be done by converting them to array of characters
+- `getTime()` : returns the current time in milliseconds since epoch
+
 
 #### user defined functions
 functions are declared using `fun` keyword 
@@ -350,6 +348,37 @@ negative steps are supported for both array slicing as well as string slicing bu
 - `&&` : logical and
 - `||` : logical or
 - `!` : logical not
+
+### Structs in AWL 
+structs are datastructures that can hold multiple values of different types 
+they are declared using the `struct` keyword 
+
+```rust
+struct Person {
+     let name = ""
+     let age = 0
+     let isStudent =false 
+}
+```
+
+you can create an instance of a struct using the `new` keyword 
+
+```rust
+let person1 = new Person
+person1["name"] = "vish"
+person1["age"] = 20
+person1["isStudent"] = true
+
+printOut(person1["name"]) #prints vish
+```
+
+as of now struct definitions are not local scopped they are global only
+a more easier way to access struct properties is planned in the future
+as well as support for methods in structs
+
+
+
+
 
 
 ## Syntax highlighting 

@@ -69,7 +69,7 @@ export interface Declaration {
 
 export interface Assignment {
   type:'Assignment',
-  identifier:string,
+  target:Identifier | MemberExpression,
   property?:Expression,
   value:Expression
 }

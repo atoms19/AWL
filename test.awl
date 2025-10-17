@@ -1,0 +1,6 @@
+let awl  ="name"
+let s="here:"
+printOut(awl)
+s=[[10,[90,99],10],100]
+s[0][1][1]="hello"
+printOut(s[0])

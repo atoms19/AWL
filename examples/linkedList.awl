@@ -1,0 +1,42 @@
+
+
+###struct LinkedListNode {
+  let data=null
+  let next =null
+}
+
+let head = null 
+let tail=null
+
+fun addNode(val){
+  if(head==null){
+	 let nn=new LinkedListNode	
+	 nn["value"] = val
+	 head=nn
+	 tail=head
+  }else{
+	 let nn = new LinkedListNode
+	 nn["value"]=val
+	 tail["next"]=nn
+  }
+}
+
+
+fun display(){
+  let iter = head 
+  while (iter!= null){
+	   printInLine(iter["value"]
+		iter=iter["next"]
+  }
+}
+
+fun main(){
+	 addNode(10)
+	 addNode(100)
+	 addNode(1003)
+display()
+}
+###
+
+let name = "vishal"
+printOut(name)
