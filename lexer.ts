@@ -8,7 +8,7 @@ export interface Token {
 }
 
 let Keywords: String[] = ["let","in", "fun", "if", "else", "while","return", "break", "continue","for","by","true", "false","null","struct","new","include"]
-let Operators: String[] = ["+", "-", "/", "*", "%", "^", "&&", "||", "==", ">", "<", "&", "|","!","!=","->"]
+let Operators: String[] = ["+", "-", "/", "*", "%", "^", "&&", "||", "==", ">", "<", "&", "|","!","!=","->","~","<~","~>"]
 
 
 
@@ -79,8 +79,8 @@ export function lexate(program: string): Token[] {
 			}
 			else if (Operators.includes(char) || (['=', '(', ')','[',']', ',', '!', '{', '}'].includes(char))) {
 				let op = char;
-				let validOperatorPairs = ["=", "&", "|", "<", ">", "!"];
-				if ((['&', '|', '=', '<', '>', '!','-'].includes(op)) && (i + 1 < line.length) && (validOperatorPairs.includes(line[i + 1]))) {
+				let validOperatorPairs = ["=", "&", "|", "<", ">", "!","~"];
+				if ((['&', '|', '=', '<', '>', '!','-','~'].includes(op)) && (i + 1 < line.length) && (validOperatorPairs.includes(line[i + 1]))) {
 					op += line[i + 1];
 					i++;
 				}

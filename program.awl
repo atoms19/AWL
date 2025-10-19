@@ -3,11 +3,19 @@ include "test.awl"
 let array = [1,2,[[9,0],2],4,5,67]
 printOut(array)
 
-array[2][0][0][0]=2
+#array[2][0][0][0]=2
 p("pokemon")
 
-printOut(array)
+# apoppingrray <~ [0]
 
+array[1] <~ 10000
+
+arrayRemoveAt(0,array)
+
+arrayRemoveAt(0,array)
+#let s = array ~> -1  
+printOut(array)
 # outreach 
 # cal.com
 # sorta
+

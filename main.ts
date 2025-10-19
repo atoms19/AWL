@@ -3,7 +3,6 @@ import { parse } from "./parser.ts"
 import {interpret} from "./interpreter.ts"
 import {readFile} from "node:fs/promises"
 
-
 export let debugMode=process.argv.includes("--debug");
 if(process.argv.length<3){
 	 console.error("Usage: awl <source-file> [--debug]")

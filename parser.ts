@@ -1,5 +1,5 @@
 import type { Token } from "./lexer.ts"
-import type { BinaryExpression, Declaration, Expression, Identifier, Program, Statement } from "./ast.ts"
+import type { BinaryExpression, Declaration, Expression, Identifier, MemberExpression, Program, Statement } from "./ast.ts"
 import { debugMode } from "./main.ts";
 
 export function parse(tokens: Token[]) {
@@ -32,27 +32,27 @@ export function parse(tokens: Token[]) {
 	}
 
 	let parseStructDeclaration = (): Statement => {
-	 yum() //eat the struct keyword
+		yum() //eat the struct keyword
 
-	 let structName = peek(0);
-	 if(structName.type != "identifier"){
-		throwParserError("expected identifier as struct name")
-	 }
-	 yum() //eat the struct name
-	 yumButOnly("openingcurlybracket")
-	 let fields: Declaration[] = []
-	 while(peek(0) && peek(0).type != "closingcurlybracket"){
-	 let field = parseDeclaration()	
-	 if(field && field.type == "Declaration"){
-		fields.push(field)
-	 }
+		let structName = peek(0);
+		if (structName.type != "identifier") {
+			throwParserError("expected identifier as struct name")
+		}
+		yum() //eat the struct name
+		yumButOnly("openingcurlybracket")
+		let fields: Declaration[] = []
+		while (peek(0) && peek(0).type != "closingcurlybracket") {
+			let field = parseDeclaration()
+			if (field && field.type == "Declaration") {
+				fields.push(field)
+			}
+		}
+		return {
+			type: "StructDeclaration",
+			name: structName.data,
+			fields: fields,
+		}
 	}
-	  return {
-		type: "StructDeclaration",
-		name: structName.data,
-		fields: fields,
-     }
-  }
 
 	const parseExpression = () => {
 		return parse7Expression()
@@ -111,7 +111,7 @@ export function parse(tokens: Token[]) {
 	//relational operators 
 	const parse4Expression = () => {
 		let left: any = parse3Expression()
-		while (peek(0) && (["<=", "<", ">", ">=","^"].includes(peek(0).data))) {
+		while (peek(0) && (["<=", "<", ">", ">=", "^"].includes(peek(0).data))) {
 			let op = yum().data;
 			let right = parse3Expression()
 			left = {
@@ -393,15 +393,15 @@ export function parse(tokens: Token[]) {
 			let asg = peek(0)
 			if (asg.type == "assignment") {
 				yum() //eating the equaltosign
-				if(peek(0) && peek(0).type =="keyword" && peek(0).data=="new") {
-				  yum()
-				  let structName = yum()
-				  if(structName.type!="identifier") throwParserError("new can only be used to create new instances of structs")
-				  return {
-					 type:"Instanciation",
-					 identifier:idf.data,
-					 structName:structName.data,
-				  }
+				if (peek(0) && peek(0).type == "keyword" && peek(0).data == "new") {
+					yum()
+					let structName = yum()
+					if (structName.type != "identifier") throwParserError("new can only be used to create new instances of structs")
+					return {
+						type: "Instanciation",
+						identifier: idf.data,
+						structName: structName.data,
+					}
 				}
 
 				return {
@@ -419,34 +419,102 @@ export function parse(tokens: Token[]) {
 	}
 
 	const parseIdentifier = (): Statement => {
-  
-			if (peek(1) && peek(1).type == "openingsquarebracket"){
-			    let value = parseMemberExpression()
-				 yum()
-				 let exp= parseExpression()
-  				 return {
-				   type:"Assignment",
-				   target:value,
-				   value:exp
-				 }
 
-			}else if (peek(1) && peek(1).type == "assignment") {
-						return parseAssignment()
+		if (peek(1) && peek(1).type == "openingsquarebracket") {
+			let value = parseMemberExpression()
+			if (peek(0) && peek(0).type == "assignment") {
+				yum()
+			} else if (!peek(0) || peek(0).type == "operator" || peek(0).data == "<~") {
+				return parsePushWithTilda(value)
+			}
+			let exp = parseExpression()
+			return {
+				type: "Assignment",
+				target: value,
+				value: exp
+			}
 
-		   }else {
-			  return parseExpression()
-			 }
-}
+		} else if (peek(1) && peek(1).type == "assignment") {
+			return parseAssignment()
+
+		} else if (peek(1) && peek(1).type == "operator" && peek(1).data == "<~") {
+			return parsePushWithTilda(undefined)
+
+		} else if (peek(1) && peek(1).type == "operator" && peek(1).data == "~>") {
+			return parsePopWithTilda()
+
+		} else {
+			return parseExpression()
+		}
+	}
+
+	const parsePopWithTilda = (): Statement => {
+		let identifier = yum()
+		yum() //eat the ~> operator
+		return {
+			type: "FunctionCall",
+			callee: {
+				type: "Identifier",
+				name: "arrayRemoveAt",
+			},
+			parameters: [
+				parseExpression(), {
+					type: "Identifier",
+					name: identifier.data
+				}
+			]
+		}
+
+	}
+
+	const parsePushWithTilda = (valueToBe: undefined | Identifier | MemberExpression): Statement => {
+		if (!valueToBe) {
+			let identifier = yum()
+			valueToBe = {
+				type: "Identifier",
+				name: identifier.data
+			}
+		}
+		else if(valueToBe.type=="MemberExpression"){
+				
+				yum()
+				return {
+					type: "FunctionCall",
+					callee: {
+						type: "Identifier",
+						name: "arrayInsertAt",
+					},
+					parameters: [valueToBe.property,valueToBe.operand,parseExpression()
+					]
+
+				}
+			
+		}
+
+		yum() //eat the <~ operator
+		return {
+			type: "FunctionCall",
+			callee: {
+				type: "Identifier",
+				name: "arrayInsert",
+			},
+			parameters: [
+				valueToBe
+				, parseExpression()
+			]
+		}
+
+	}
 
 
-	const parseAssignment = (): Statement => {		
+	const parseAssignment = (): Statement => {
 		const varname = yum() //eating the identifier
 		yum() // eating the equal to sign 
 		return {
 			type: 'Assignment',
 			target: {
-						type: 'Identifier',
-						name: varname.data
+				type: 'Identifier',
+				name: varname.data
 			} as Identifier,
 			value: parseExpression()
 		}
@@ -543,7 +611,7 @@ export function parse(tokens: Token[]) {
 			if (line) body.push(line)
 		} else {
 			yum() //eat the opening curly bracket
-			 body = parseBlock()
+			body = parseBlock()
 			yum() //eat the closing curly bracket
 		}
 		return {
@@ -585,17 +653,17 @@ export function parse(tokens: Token[]) {
 	}
 
 	const parseIncludeStatement = (): Statement => {
-		  yum() //eat the include keyword
-		  let fileToken = peek(0)
-		  if(fileToken.type != "stringliteral"){
+		yum() //eat the include keyword
+		let fileToken = peek(0)
+		if (fileToken.type != "stringliteral") {
 			throwParserError("expected string literal as file name in include statement")
-		  }
-		  yum() //eat the file name
-		  return {
-			type:"IncludeStatement",
-			file:fileToken.data,
-		  }
-	 }
+		}
+		yum() //eat the file name
+		return {
+			type: "IncludeStatement",
+			file: fileToken.data,
+		}
+	}
 	const parseBody = (token: Token): Statement | undefined => {
 		switch (token.type) {
 			case "keyword":
@@ -615,16 +683,16 @@ export function parse(tokens: Token[]) {
 						return parseReturnStatement()
 					case "for":
 						return parseForLoop()
-				   case "struct":
-					    return parseStructDeclaration();
-				   case "include":
-					    return parseIncludeStatement()
+					case "struct":
+						return parseStructDeclaration();
+					case "include":
+						return parseIncludeStatement()
 					default:
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}
 				break;
-			 case "identifier":
-			     return parseIdentifier()	
+			case "identifier":
+				return parseIdentifier()
 			case "openingcurlybracket":
 			case "closingcurlybracket":
 				yum()

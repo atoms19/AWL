@@ -1,12 +1,12 @@
 import Readline from "node:readline"
-import {debugMode} from "./main.ts"
+import { debugMode } from "./main.ts"
 
 const executeOutput = (...values) => {
-  console.log(...values)
+	console.log(...values)
 }
 
-const executeInlineOutPut = (values:string) =>{
-  process.stdout.write(values)
+const executeInlineOutPut = (values: string) => {
+	process.stdout.write(values)
 }
 
 
@@ -24,85 +24,88 @@ const executeInput = async (...values) => {
 
 }
 
-const convertToInteger = (value)=>{
-  let num = Number(value)
-	if(isNaN(num)){
+const convertToInteger = (value) => {
+	let num = Number(value)
+	if (isNaN(num)) {
 		throw new Error(`Runtime error: Cannot convert ${value} to integer`)
 	}
 	return Math.floor(num)
 }
 
-const toCharCode = (char)=>{
-  if(typeof char !=="string" || char.length!==1){
+const toCharCode = (char) => {
+	if (typeof char !== "string" || char.length !== 1) {
 		throw new Error(`Runtime error: Argument must be a single character string`)
 	}
 	return char.charCodeAt(0)
 }
 
-const toChar = (code)=>{
-  if(typeof code !=="number" || !Number.isInteger(code) || code<0 || code>65535){
+const toChar = (code) => {
+	if (typeof code !== "number" || !Number.isInteger(code) || code < 0 || code > 65535) {
 		throw new Error(`Runtime error: Argument must be an integer between 0 and 65535`)
 	}
 	return String.fromCharCode(code)
 }
 
-const convertToFloat = (value)=>{
-  let num = Number(value)
-	if(isNaN(num)){
+const convertToFloat = (value) => {
+	let num = Number(value)
+	if (isNaN(num)) {
 		throw new Error(`Runtime error: Cannot convert ${value} to float`)
 	}
 	return num
 }
 
-const arrayInsertAt=(index,arr,value)=>{
-  if(!Array.isArray(arr)){
-		throw new Error(`Runtime error: First argument must be an array`)
+const arrayInsertAt = (index, arr, value) => {
+	if (!Array.isArray(arr)) {
+		throw new Error(` error: argument should be an array`)
 	}
-	if(typeof index!=="number" || index<0 || index>arr.length || !Number.isInteger(index)){
-		throw new Error(`Runtime error: Index must be a valid non-negative integer within array bounds`)
+	if (typeof index !== "number" || index > arr.length || !Number.isInteger(index)) {
+		throw new Error(`Runtime error: Index must be a valid integer within array bounds`)
 	}
-	arr.splice(index,0,value)
-	if(debugMode) console.log(`Inserted ${value} at index ${index} in array. New array:`, arr)
+	arr.splice(index, 0, value)
+	if (debugMode) console.log(`Inserted ${value} at index ${index} in array. New array:`, arr)
 	return arr
 }
-const arrayInsert=(arr,value)=>{
-  if(!Array.isArray(arr)){
+const arrayInsert = (arr, value) => {
+	if (!Array.isArray(arr)) {
 		throw new Error(`Runtime error: First argument must be an array`)
 	}
 	arr.push(value)
-	if(debugMode) console.log(`Pushed ${value} to array. New array:`, arr)
+	if (debugMode) console.log(`Pushed ${value} to array. New array:`, arr)
 	return arr
 }
 
-const arrayLength =(arr)=>{
-   if(!Array.isArray(arr)){
+const arrayLength = (arr) => {
+	if (!Array.isArray(arr)) {
 		throw new Error(`Runtime error: Argument must be an array`)
 	}
 	return arr.length
 }
 
-const toArray=(value:string)=>{
-   return value.split('')
+const toArray = (value: string) => {
+	return value.split('')
 }
 
-const arrayRemoveAt=(index,arr)=>{
-	 if(!Array.isArray(arr)){
+const arrayRemoveAt = (index, arr) => {
+	if (!Array.isArray(arr)) {
 		throw new Error(`Runtime error: Second argument must be an array`)
 	}
-	if(typeof index!=="number" || index<0 || index>=arr.length || !Number.isInteger(index)){
-		throw new Error(`Runtime error: Index must be a valid non-negative integer within array bounds`)
+	if (index < 0) {
+		index = arr.length + index - 1
 	}
-	let removed = arr.splice(index,1)[0]
-	if(debugMode) console.log(`Removed element at index ${index} from array. New array:`, arr)
+	if (typeof index !== "number" || index >= arr.length || !Number.isInteger(index)) {
+		throw new Error(`Runtime error: Index must be a valid integer within array bounds`)
+	}
+	let removed = arr.splice(index, 1)[0]
+	if (debugMode) console.log(`Removed element at index ${index} from array. New array:`, arr)
 	return removed
 }
 
-const toString =(value)=>{
-   if(typeof value =="number"){
-   return String(value)
-	}else if (Array.isArray(value)){
-		 return value.join('')
-  }
+const toString = (value) => {
+	if (typeof value == "number") {
+		return String(value)
+	} else if (Array.isArray(value)) {
+		return value.join('')
+	}
 }
 
 const clock = () => {
@@ -110,26 +113,51 @@ const clock = () => {
 }
 
 
+const AND = (a, b) => {
+	return a & b
+}
+const OR = (a, b) => {
+	return a | b
+}
+const XOR = (a, b) => {
+	return a ^ b
+}
+const NOT = (a) => {
+	return ~a
+}
+const L_SHIFT = (a, b) => {
+	return a << b
+}
+const R_SHIFT = (a, b) => {
+	return a >> b
+}
 
 
 
 
 
 export const standardFunctions = {
-	 "printOut":executeOutput,
-	 "printInline":executeInlineOutPut,
-	 "getTime":clock,
-	 "getInput":executeInput,
-	 "toInt":convertToInteger,
-	 "toFloat":convertToFloat,
-	 "toArray":toArray,
-	 "toString":toString,
-	 "arrayInsert":arrayInsert,
-	 "arrayInsertAt":arrayInsertAt,
-	 "arrayRemoveAt":arrayRemoveAt,
-	 "arrayLength":arrayLength 
-	 ,"toCharCode":toCharCode
-	  ,"toChar":toChar
+	"printOut": executeOutput,
+	"printInline": executeInlineOutPut,
+	"getTime": clock,
+	"getInput": executeInput,
+	"toInt": convertToInteger,
+	"toFloat": convertToFloat,
+	"toArray": toArray,
+	"toString": toString,
+	"arrayInsert": arrayInsert,
+	"arrayInsertAt": arrayInsertAt,
+	"arrayRemoveAt": arrayRemoveAt,
+	"arrayLength": arrayLength
+	,"toCharCode": toCharCode
+	,"toChar": toChar
+	,"AND": AND
+	, "OR": OR
+	, "XOR": XOR
+	, "NOT": NOT
+	, "L_SHIFT": L_SHIFT
+	, "R_SHIFT": R_SHIFT
+
 }
 
 

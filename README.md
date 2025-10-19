@@ -229,6 +229,17 @@ for( char in toArray(str)) {
 
 `break` and `continue` statements are supported in for loops as well
 
+### bite wise operations in AWL 
+awl uses functions for bitewise operations unlike other c based languages 
+we reserve most symbols for syntactic meaning rather than bitewise as you wont be 
+dealing with bitewise often 
+
+`AND(a,b)` this function will give u bitewise and 
+`OR(a,b)` is bitewise or 
+`XOR(a,b)` is bitewise xor 
+`NOT(a)` is bitewise not 
+
+
 ### Arrays in AWL
 
 arrays are declared using square brackets 
@@ -281,6 +292,61 @@ you can also specify step in slicing
 let  arr = [1,2,3,4,5]
 let slicedArr = arr[0 -> 5 by 2] #slicedArr = [1,3,5]
 ```
+
+
+#### array operators 
+`<~` operator is used to push to an array 
+
+```py
+let arr = [1,2,3]
+arr <~ 4 # arr = [1,2,3,4]
+```
+
+you can also insert to a specific index using `<~`  operator 
+
+```py
+let arr = [1,2,3]
+arr[1] <~ 1.5 # arr = [1,1.5,2,3]
+```
+
+for removing elements the suggested way is to use the builtin function `arrayRemoveAt(index, array)`
+
+```py
+let arr = [1,2,3,4,5]
+arrayRemoveAt(2, arr) #arr = [1,2,4,5]
+```
+
+builtin functions for inserting still exist the operators are just syntactic sugar over them
+
+for removing at any index using operators you can use `~>` operator 
+
+```py
+let arr = [1,2,3,4,5]
+arr ~> 2 #arr = [1,2,4,5]
+```
+
+this will remove the element at index 2 from array but will not return it , as its a standalone statment 
+and not to be confused with expressions or to be used in them 
+
+the sugged way is to store the value to be removed in a variable first and then remove it 
+
+```py
+let arr = [1,2,3,4,5]
+let valueToRemove = arr[2]
+arr ~> 2
+printOut(valueToRemove) #prints 3
+```
+
+or you could just use the builin function `arrayRemoveAt` which returns the removed value 
+
+```py   
+let arr = [1,2,3,4,5]
+let removedValue = arrayRemoveAt(2, arr)
+printOut(removedValue) #prints 3
+```
+
+enhancements in this area is expected in the next update 
+
 
 ### Strings in AWL
 strings are declared using double quotes 
