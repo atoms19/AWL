@@ -426,7 +426,7 @@ and then run the following command to enable it
 - add closures 
 - add biterary operations (and , or , xor , not , left shift , right shift)
 - add a standard library (math , string )
-
+- more optimizations 
 
 awl is supposed to be a typesafe language but as of now it isnt
 i plan to add typesafety in the future 
