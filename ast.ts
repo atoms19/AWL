@@ -5,6 +5,12 @@ export interface ExpressionStatement{
   expression:Expression
 }
 
+export interface IncludeStatement {
+  type:'IncludeStatement',
+  file :string
+}
+
+
 export interface FunctionDefinition{
   type:"FunctionDefinition",
   name:string,
@@ -119,7 +125,7 @@ structName : string,
 identifier:string 
 }
   
-export type Statement = Declaration | StructDeclaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition | ControFlowStatement | ReturnStatement | ForStatement  | Instanciation
+export type Statement = Declaration | StructDeclaration | ExpressionStatement | FunctionCall | Assignment  | IfStatement | WhileStatement | FunctionDefinition | ControFlowStatement | ReturnStatement | ForStatement  | Instanciation | IncludeStatement
 
 export interface Program{
   type:'Program',

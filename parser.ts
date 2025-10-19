@@ -111,7 +111,7 @@ export function parse(tokens: Token[]) {
 	//relational operators 
 	const parse4Expression = () => {
 		let left: any = parse3Expression()
-		while (peek(0) && (["<=", "<", ">", ">="].includes(peek(0).data))) {
+		while (peek(0) && (["<=", "<", ">", ">=","^"].includes(peek(0).data))) {
 			let op = yum().data;
 			let right = parse3Expression()
 			left = {
@@ -583,6 +583,19 @@ export function parse(tokens: Token[]) {
 
 
 	}
+
+	const parseIncludeStatement = (): Statement => {
+		  yum() //eat the include keyword
+		  let fileToken = peek(0)
+		  if(fileToken.type != "stringliteral"){
+			throwParserError("expected string literal as file name in include statement")
+		  }
+		  yum() //eat the file name
+		  return {
+			type:"IncludeStatement",
+			file:fileToken.data,
+		  }
+	 }
 	const parseBody = (token: Token): Statement | undefined => {
 		switch (token.type) {
 			case "keyword":
@@ -604,6 +617,8 @@ export function parse(tokens: Token[]) {
 						return parseForLoop()
 				   case "struct":
 					    return parseStructDeclaration();
+				   case "include":
+					    return parseIncludeStatement()
 					default:
 						throwParserError(`unexpected keyword ${token.data} found`)
 				}

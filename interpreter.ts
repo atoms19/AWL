@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import type { FunctionCall, FunctionDefinition, IfStatement, MemberExpression, Program, Statement, UnaryExpression, WhileStatement } from "./ast.ts"
 import { Environment } from "./environment.ts"
 import { debugMode } from "./main.ts"
@@ -222,8 +223,7 @@ export async function interpret(program: Program) {
 		   let current = d.target
 	       while(current.type=="MemberExpression"){
 			   let prop = await interpretValue(current.property, env)
-				if(debugMode) console.log("Current property ", prop)
-				
+				if(debugMode) console.log("Current property ", prop)	
 				rbase = base[prop]
 				if(debugMode) console.log("Current base ", rbase)
 			  current = current.operand
@@ -341,8 +341,21 @@ export async function interpret(program: Program) {
 		}
 	}
 
+	const interpretIncludeStatement = async (smt: Statement, env: Environment) => {
+	         if(smt.type!="IncludeStatement") throw new Error("Not an include statement")      
+	        if(!smt.file.endsWith(".awl")) throw new Error("Can only include .awl files")
+			  let fileCOntent = await readFileSync(smt.file,"utf-8")
+			  let lexed = await import("./lexer.ts").then(mod=>mod.lexate(fileCOntent))
+			  let parsed = await import("./parser.ts").then(mod=>mod.parse(lexed))
+			  for(const stmt of parsed.body){
+				  await interpretBody(stmt,env)
+			  }
+	}
+
 	const interpretBody = async (statement: Statement, env: Environment) => {
-		if (statement.type == "Declaration") {
+	  if(statement.type == "IncludeStatement"){
+				await interpretIncludeStatement(statement, env)
+		}else if (statement.type == "Declaration") {
 			await interpretDeclaration(statement, env)
 		} else if (statement.type == "FunctionCall") {
 			await interpretFunctionCall(statement, env)

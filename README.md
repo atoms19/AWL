@@ -34,14 +34,11 @@ its that easy youll see the output
 ### Hello world in AWL 
 
 some of the awl syntax feels less in line with other languages and thats intentional to make it stand out in a wierd way and some of it me just being wacky ```awl printOut("Hello World")
-```
-
 printOut prints every line in a new line ,
 to avoid this behaviour you can use 
-
 printInline
 
-```awl
+```rust
 printInline("Hello ")
 printInline("World")
 ```
@@ -52,7 +49,7 @@ this will be printed in the same line as "hello world" printInline is more primi
 ### Variables in AWL
 variables are declared using the `let` keyword 
 
-```awl
+```js
 let x = 10
 let  name = "vish"
 ```
@@ -60,7 +57,7 @@ variables are dynamically typed , you can reassign them as well
 
 you can convert between types using the following functions 
 
-```awl
+```js
 toInt(x) // converts x to integer
 toString(x) // converts x to string
 toFloat(x) // converts x to float
@@ -75,7 +72,7 @@ basic datatypes in awl are Numeric , String , Array
 comments in awl are done with `#` for single line comments and 
 `### ###` for multi line comments 
 
-```awl
+```py
 # this is a single line comment
 
 ###
@@ -363,7 +360,7 @@ struct Person {
 
 you can create an instance of a struct using the `new` keyword 
 
-```rust
+```js
 let person1 = new Person
 person1["name"] = "vish"
 person1["age"] = 20
@@ -376,9 +373,39 @@ as of now struct definitions are not local scopped they are global only
 a more easier way to access struct properties is planned in the future
 as well as support for methods in structs
 
+### Including other awl files
+you can include other awl files using the `include` keyword 
+this is very similar to `#include` in C/C++ 
+
+```rust
+include "otherfile.awl"
+```
+
+this is how we can have awl files with reusable code and import them in other files
+pretty much everything from the other file is imported into the current file 
+so make sure that there are no name conflicts
+
+- will be working on a proper module system once classLoader is implemented 
+
+```rust 
+# math.awl
+fun add(a,b) {
+    return a + b
+}
+```
 
 
+```rust 
+include "math.awl"
 
+let result = add(10, 20) # assuming add is defined in math.awl
+
+printOut(result) #prints 30
+```
+
+
+there is no standard library as of now so you have to write your own utility functions
+might add a standard library in the future
 
 
 ## Syntax highlighting 
@@ -396,10 +423,9 @@ and then run the following command to enable it
 
 ## Future Plans
 
-
 - add closures 
-- add support for structs
-- add biterary operations
+- add biterary operations (and , or , xor , not , left shift , right shift)
+- add a standard library (math , string )
 
 
 awl is supposed to be a typesafe language but as of now it isnt
