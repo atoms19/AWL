@@ -12,7 +12,9 @@ struct mark {
 let students = [] # to store all students 
 
 fun createStudent(){
+
    let s1=new student
+
 	s1["name"]=getInput("enter the name of the student :")
 	s1["age"]=toInt(getInput("enter the age of the student : "))
 	let n = toInt(getInput("enter the number of subjects : "))

@@ -2,11 +2,11 @@ import Readline from "node:readline"
 import { debugMode } from "./main.ts"
 
 const executeOutput = (...values) => {
-	console.log(...values)
+	console.log(...values||"")
 }
 
 const executeInlineOutPut = (values: string) => {
-	process.stdout.write(values)
+	process.stdout.write(values || "")
 }
 
 
@@ -16,7 +16,7 @@ const executeInput = async (...values) => {
 		output: process.stdout
 	})
 	return new Promise((resolve) => {
-		r.question(values[0], (v) => {
+		r.question(values[0]||"", (v) => {
 			r.close()
 			resolve(v)
 		})

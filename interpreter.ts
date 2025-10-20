@@ -3,6 +3,8 @@ import type { FunctionCall, FunctionDefinition, IfStatement, MemberExpression, P
 import { Environment } from "./environment.ts"
 import { debugMode } from "./main.ts"
 import { standardFunctions } from "./standardFunctions.ts"
+import { lexate } from "./lexer.ts"
+import { parse } from "./parser.ts"
 
 class ReturnEventError extends Error {
 	val: any
@@ -349,8 +351,8 @@ export async function interpret(program: Program) {
 	         if(smt.type!="IncludeStatement") throw new Error("Not an include statement")      
 	        if(!smt.file.endsWith(".awl")) throw new Error("Can only include .awl files")
 			  let fileCOntent = await readFileSync(smt.file,"utf-8")
-			  let lexed = await import("./lexer.ts").then(mod=>mod.lexate(fileCOntent))
-			  let parsed = await import("./parser.ts").then(mod=>mod.parse(lexed))
+			  let lexed = await lexate(fileCOntent)
+			  let parsed = await parse(lexed)
 			  for(const stmt of parsed.body){
 				  await interpretBody(stmt,env)
 			  }
