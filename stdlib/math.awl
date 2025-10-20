@@ -1,0 +1,60 @@
+let PI = 3.1415926535
+let e = 2.7182818284
+
+fun min (a,b){
+  if ( a < b ) return a 
+  return b 
+}
+
+fun max(a,b){
+  if ( a > b ) return a 
+  return b
+}
+
+fun abs(a){
+  if ( a < 0 ) return -a
+  return a
+}
+
+fun ciel(a){
+  let intval=toInt(a)
+  if(intval==a) return a
+  if(a > 0 ){
+    return intval+1
+  }
+  return intval 
+}
+fun round(a){
+  if(a >= 0 ){
+	 return toInt(a+0.5)
+  }
+  return toInt(a-0.5)
+}
+fun floor(a){
+  return toInt(a)
+}
+
+fun sqrt(a){
+  return a^(1/2)
+}
+
+fun tan(a){
+  return sin(a)/cos(a)
+}
+
+fun log(a){
+   return ln(a)/ln(10)
+}
+
+fun cosec(a){
+   return 1/sin(a)
+}
+fun sec(a){
+  return 1/cos(a)
+}
+
+fun cot(a){
+  return 1/tan(a)
+}
+
+

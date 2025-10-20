@@ -1,0 +1,63 @@
+# this module gives you complex number functions 
+
+struct ComplexNo {
+   let real=0
+	let img = 0
+}
+
+
+fun complex(real,imaginary){
+     let newCn = new ComplexNo
+	  newCn["real"]=real
+	  newCn["img"]=imaginary
+	 return newCn
+}
+
+fun complexMagSqr(cmplx){
+     return cmplx["real"]^2 + cmplx["img"]^2
+}
+
+
+fun complexMag(cmplx){
+   return complexMagSqr(cmplx)^(1/2)
+}
+
+fun complexAdd(c1,c2){
+   let real=c1["real"]+c2["real"]
+	let imag= c2["img"] + c1["img"]
+	return complex(real,imag)
+}
+
+fun complexSub(c1,c2){
+   let real=c1["real"]-c2["real"]
+	let imag= c1["img"] - c2["img"]
+	return complex(real,imag)
+}
+
+fun complexMul(c1,c2){
+    let realPart = c1["real"]*c2["real"] - c1["img"]*c2["img"]
+	 let imaginary = c1["real"]*c2["img"] + c2["real"]*c1["img"]
+	 return complex(realPart,imaginary)
+}
+
+fun complexConj(cmplx){
+  let real = cmplx["real"]
+  let img = cmplx["img"]
+  return complex(real,-img)
+}
+
+fun complexDiv(c1,c2){
+   let divisor = complexMagSqr(c1,c2) 
+	 if(divisor == 0) return null
+	 let realPart = (c1["real"]*c2["real"] + c1["img"]*c2["img"]) / divisor 
+    let imagPart = (c1["img"]*c2["real"] - c1["real"]*c2["img"]) / divisor
+    
+    return complex(realPart, imagPart)
+}
+
+fun complexNeg(cmplx){
+	 return complex(-cmplx["real"], -cmplx["img"])
+}
+
+
+

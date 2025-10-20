@@ -1,0 +1,74 @@
+# stirng module is useful for string operations
+
+
+fun stringLen(str){
+   let len = 0
+   for ( i in toArray(str))
+	    len= len +1
+   return len
+}
+
+fun stringRepeat(str,count){
+  let s=""
+  for( i in 0->count)
+	 s=s+str
+  return s
+}
+
+fun stringLTrim(str){
+    let s =""
+	 let nonSpaceCharFound=false
+    for ( i in toArray(str)){
+		  if(!nonSpaceCharFound && i ==" "){
+		     continue
+		  }
+		  nonSpaceCharFound=true
+		  s=s+i
+	 }
+	 return s
+}
+
+fun stringRTrim(str){
+  let s = ""
+  let pendingSpaces=""
+  for ( i in toArray(str)){
+	 if(i ==" "){
+	    pendingSpaces=pendingSpaces+" "
+	 }else{
+	   s=s+pendingSpaces
+		pendingSpaces=""
+		s=s+i
+	 }
+  }
+  return s
+}
+
+fun stringTrim(str){
+    let ltr = stringLTrim(str)
+	 let rtr= stringRTrim(ltr)
+	 return rtr
+}
+
+fun stringToLower(str){
+   let ls=""
+	for(s in toArray(str)){
+	   if(toCharCode(s)<65 || toCharCode(s)>90){
+	      ls=ls + s
+			continue
+		}
+		ls = ls + toChar(toCharCode(s)+32)
+	}
+	return ls
+}
+
+fun stringToUpper(str){
+    let us=""
+    for(s in toArray(str)){
+	   if(toCharCode(s)<97 || toCharCode(s)>122){
+	      us=us + s
+		  continue
+	 }
+		  us=us + toChar(toCharCode(s)-32)
+	 }
+	 return us
+}

@@ -451,6 +451,111 @@ let slicedStr = str[0 -> 11 by 2] #slicedStr = "hlowrd"
 ```
 negative steps are supported for both array slicing as well as string slicing but awl does not have negative indexing 
 
+-----
+
+# Standard Library: stdlib/string
+
+The string module provides essential helper functions for string manipulation and inspection.
+
+You must first include the module to use its functions:
+
+```rust
+include "stdlib/string.awl"
+```
+
+-----
+
+## Functions
+
+### fun stringLen(str)
+
+Returns the total number of characters in a string.
+
+```js
+let name = "AWL"
+let len = stringLen(name)
+printOut(len) # Prints 3
+
+let empty = ""
+printOut(stringLen(empty)) # Prints 0
+```
+
+-----
+
+### fun stringRepeat(str, count)
+
+Returns a new string by concatenating the original `str` to itself `count` times.
+
+```js
+let s = "xo"
+let repeated = stringRepeat(s, 3)
+printOut(repeated) # Prints "xoxoxo"
+
+printOut(stringRepeat("=", 10)) # Prints "=========="
+```
+
+-----
+
+### fun stringLTrim(str)
+
+Removes all whitespace characters from the **L**eft (beginning) of a string.
+
+```py
+let s = "   hello world"
+let trimmed = stringLTrim(s)
+printOut(trimmed) # Prints "hello world"
+```
+
+-----
+
+### fun stringRTrim(str)
+
+Removes all whitespace characters from the **R**ight (end) of a string.
+
+```py
+let s = "hello world   "
+let trimmed = stringRTrim(s)
+printOut(trimmed) # Prints "hello world"
+```
+
+-----
+
+### fun stringTrim(str)
+
+Removes all whitespace characters from both the beginning **and** the end of a string. This is a combination of `stringLTrim` and `stringRTrim`.
+
+```py
+let s = "   hello world   "
+let trimmed = stringTrim(s)
+printOut(trimmed) # Prints "hello world"
+```
+
+-----
+
+### fun stringToUpper(str)
+
+Returns a new string with all alphabetic characters converted to their uppercase equivalent.
+
+```py
+let s = "Hello World 123!"
+let upper = stringToUpper(s)
+printOut(upper) # Prints "HELLO WORLD 123!"
+```
+
+-----
+
+### fun stringToLower(str)
+
+Returns a new string with all alphabetic characters converted to their lowercase equivalent.
+
+```py
+let s = "Hello World 123!"
+let lower = stringToLower(s)
+printOut(lower) # Prints "hello world 123!"
+```
+
+---
+---
 
 ### Operators in AWL
 
@@ -553,6 +658,264 @@ printOut(result) #prints 30
 
 there is no standard library as of now so you have to write your own utility functions
 might add a standard library in the future
+
+## extra libarires 
+
+
+-----
+
+# Standard Library: stdlib/math
+
+The math module provides common mathematical constants and functions. Some functions (`sin`, `cos`, `ln`) are assumed to be fast, native functions provided by the interpreter, while others are derived from them and written in pure AWL.
+
+You must first include the module to use its functions:
+
+```awl
+include "stdlib/math.awl"
+```
+
+
+-----
+
+## Constants
+
+### let PI
+
+The constant $\pi$ (Pi), approximately $3.14159...$. Used for circle and trigonometric calculations.
+
+### let e
+
+The constant $e$, approximately $2.71828...$. The base of the natural logarithm.
+
+-----
+
+## Utility Functions
+
+### fun min(a, b)
+
+Returns the smaller of the two numbers `a` and `b`.
+
+```awl
+printOut(min(10, 20)) # Prints 10
+```
+
+### fun max(a, b)
+
+Returns the larger of the two numbers `a` and `b`.
+
+```awl
+printOut(max(10, 20)) # Prints 20
+```
+
+### fun abs(a)
+
+Returns the absolute (non-negative) value of `a`.
+
+```awl
+printOut(abs(-5.5)) # Prints 5.5
+printOut(abs(5.5))  # Prints 5.5
+```
+
+-----
+
+## Rounding Functions
+
+### fun ceil(a)
+
+Returns the "ceiling" of `a`, which is the smallest integer greater than or equal to `a`. It rounds numbers **up**.
+
+```awl
+printOut(ciel(3.1)) # Prints 4
+printOut(ciel(3.0)) # Prints 3
+printOut(ciel(-3.9)) # Prints -3
+```
+
+### fun floor(a)
+
+⚠️ **Important Note:** This function truncates the decimal (rounds toward zero). This matches `floor` for positive numbers, but not for negative ones.
+(e.g., The true mathematical `floor` of $-3.9$ is $-4$, but this function will return $-3$).
+
+```awl
+printOut(floor(3.9)) # Prints 3
+printOut(floor(-3.9)) # Prints -3 (truncated)
+```
+
+### fun round(a)
+
+
+Returns the value of `a` rounded to the nearest integer. Numbers ending in `.5` are rounded away from zero.
+
+```awl
+printOut(round(3.1)) # Prints 3
+printOut(round(3.9)) # Prints 4
+printOut(round(-3.9)) # Prints -4
+```
+
+-----
+
+## Power & Log Functions
+
+### fun sqrt(a)
+
+Returns the square root of `a` by calculating $a^{0.5}$.
+
+```awl
+printOut(sqrt(100)) # Prints 10
+```
+
+### fun log(a)
+
+Returns the **base-10 logarithm** of `a`. This function assumes a native function `ln(a)` (natural log) exists.
+
+```awl
+printOut(log(100)) # Prints 2
+```
+
+-----
+
+## Trigonometric Functions
+
+`sin(a)` and `cos(a)` are provided as native functions and that `a` is in radians.
+
+### fun tan(a)
+
+Returns the tangent of `a`.
+
+### fun sec(a)
+
+Returns the secant of `a`.
+
+### fun cosec(a)
+
+Returns the cosecant of `a`.
+
+### fun cot(a)
+
+Returns the cotangent of `a`.
+-----
+
+
+---
+# Standard Library: stdlib/complex
+
+The complex module provides functions and a data structure for performing complex number arithmetic. This is essential for advanced mathematical, scientific, or engineering calculations.
+
+You must first include the module to use its functions:
+
+```awl
+include "stdlib/complex.awl"
+```
+
+-----
+
+## Data Structure
+
+### struct ComplexNo
+
+This is the core data structure used by the module to store a complex number. It contains two fields:
+
+  * `real`: The real part of the number.
+  * `img`: The imaginary part of the number.
+
+You should not typically create this struct directly. Use the `complex()` constructor function instead.
+
+-----
+
+## Functions
+
+### fun complex(real, imaginary)
+
+This is the "constructor" function. It creates and returns a new `ComplexNo` struct populated with the given real and imaginary components.
+
+```js
+let c1 = complex(3, 4)
+```
+This creates a complex number representing $3 + 4i$.
+
+### fun complexAdd(c1, c2)
+
+Returns a new `ComplexNo` struct that is the **sum** of `c1` and `c2`.
+
+```js
+let a = complex(1, 2)
+let b = complex(3, 4)
+let sum = complexAdd(a, b)
+```
+ 'sum' is now a ComplexNo struct { real: 4, img: 6 }
+
+### fun complexSub(c1, c2)
+Returns a new `ComplexNo` struct that is the **difference** of `c1` and `c2` ($c1 - c2$).
+
+```py
+let a = complex(5, 5)
+let b = complex(1, 2)
+let diff = complexSub(a, b)
+# 'diff' is now a ComplexNo struct { real: 4, img: 3 }
+```
+
+### fun complexMul(c1, c2)
+
+Returns a new `ComplexNo` struct that is the **product** of `c1` and `c2`.
+
+```py
+let a = complex(2, 3)
+let b = complex(4, 5)
+let product = complexMul(a, b)
+# 'product' is now a ComplexNo struct { real: -7, img: 22 }
+```
+
+### fun complexDiv(c1, c2)
+
+Returns a new `ComplexNo` struct that is the **quotient** of `c1` and `c2` ($c1 / c2$). It will print an error and return `0 + 0i` if a division by zero is attempted.
+
+```py
+let a = complex(-7, 22)
+let b = complex(2, 3)
+let quotient = complexDiv(a, b)
+# 'quotient' is now a ComplexNo struct { real: 4, img: 5 }
+```
+
+### fun complexMagSqr(c)
+
+Returns a **Numeric** (not a complex number) representing the **magnitude squared** ($|c|^2$) of the complex number $c$. This is faster than `complexMag` as it avoids a square root operation.
+
+**This is the preferred function for escape-time fractals (like Mandelbrot).**
+
+```py
+let c = complex(3, 4)
+let magSqr = complexMagSqr(c)
+printOut(magSqr) # Prints 25
+```
+
+### fun complexMag(c)
+
+Returns a **Numeric** representing the **magnitude** ($|c|$) of the complex number $c$. This is the actual length or "distance from zero" of the number.
+
+```py
+let c = complex(3, 4)
+let mag = complexMag(c)
+printOut(mag) # Prints 5
+```
+
+### fun complexConj(c)
+
+Returns a new `ComplexNo` struct that is the **conjugate** of $c$. The conjugate of ($a + bi$) is ($a - bi$).
+
+```py
+let c = complex(3, 4)
+let conj = complexConj(c)
+# 'conj' is now a ComplexNo struct { real: 3, img: -4 }
+```
+
+### fun complexNeg(c)
+
+Returns a new `ComplexNo` struct that is the **negation** of $c$. The negation of ($a + bi$) is ($-a - bi$).
+
+```py
+let c = complex(3, 4)
+let neg = complexNeg(c)
+# 'neg' is now a ComplexNo struct { real: -3, img: -4 }
+```
 
 
 ## Syntax highlighting 

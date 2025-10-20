@@ -187,8 +187,10 @@ export const standardFunctions = {
  "fileWrite":executeFileWrite,
  "fileApeend":executeFileAppend,
  "fileExists":existsSync,
- "runCommand":executeCommand
-
+ "runCommand":executeCommand,
+ "sin":Math.sin,
+ "cos":Math.cos,
+ "ln":Math.log,
 }
 
 

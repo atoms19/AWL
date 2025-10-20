@@ -1,4 +1,5 @@
-let s =runCommand("cat read.txt")
-printOut(s)
-runCommand("eho 'ho' >> read.txt")
+include "stdlib/string.awl"
 
+let s ="HELLo"
+
+printOut(stringToLower(s))
