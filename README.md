@@ -502,6 +502,24 @@ as of now struct definitions are not local scopped they are global only
 a more easier way to access struct properties is planned in the future
 as well as support for methods in structs
 
+### File operations in AWL
+awl supports basic file operations using builtin functions
+- `fileWrite(filename, content)` : writes content to a file with name filename
+- `fileRead(filename)` : reads content from a file with name filename and returns it as a string
+- `fileAppend(filename, content)` : appends content to a file with name filename
+- `fileExists(filename)` : checks if a file with name filename exists and returns true or false
+
+### running shell commands
+you can run shell commands using the `runCommand(command)` function
+it takes a string command as an argument and returns the output of the command as a string
+```rust
+let output = runCommand("ls -la")
+printOut(output)
+```
+
+
+
+
 ### Including other awl files
 you can include other awl files using the `include` keyword 
 this is very similar to `#include` in C/C++ 
@@ -553,7 +571,6 @@ and then run the following command to enable it
 ## Future Plans
 
 - add closures 
-- add biterary operations (and , or , xor , not , left shift , right shift)
 - add a standard library (math , string )
 - more optimizations 
 

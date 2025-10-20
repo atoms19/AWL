@@ -1,5 +1,8 @@
 import Readline from "node:readline"
 import { debugMode } from "./main.ts"
+import { existsSync, open, readFileSync, writeFileSync } from "node:fs"
+import { exec } from "node:child_process"
+import { promisify } from "node:util"
 
 const executeOutput = (...values) => {
 	console.log(...values||"")
@@ -133,6 +136,29 @@ const R_SHIFT = (a, b) => {
 }
 
 
+// ---file operations ----
+
+
+const executeFileWrite = async (fd:string, data:string) => {
+	 return await writeFileSync(fd, data, {encoding:"utf-8"})
+}
+const executeFileRead = async (fd:string,length:number) => {
+	return await readFileSync(fd, {encoding:"utf-8", flag:"r"}); 
+}
+const executeFileAppend = async (fd:string, data:string) => {
+	  return await writeFileSync(fd, data, {encoding:"utf-8", flag:":a"})
+}
+
+const executeCommand = async (command:string) => {
+  let promisifydExec = promisify(exec);
+  try {
+    let {stdout} =await  promisifydExec(command)
+	 return stdout
+  }catch(err){
+	 		throw new Error(`Runtime error: Command execution failed - ${err}`)
+	}
+
+}
 
 
 
@@ -156,7 +182,12 @@ export const standardFunctions = {
 	, "XOR": XOR
 	, "NOT": NOT
 	, "L_SHIFT": L_SHIFT
-	, "R_SHIFT": R_SHIFT
+	, "R_SHIFT": R_SHIFT,
+ "fileRead":executeFileRead,
+ "fileWrite":executeFileWrite,
+ "fileApeend":executeFileAppend,
+ "fileExists":existsSync,
+ "runCommand":executeCommand
 
 }
 
