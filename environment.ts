@@ -14,37 +14,27 @@ export class Environment {
 		this.memory.set(key, value)
 	}
 
-	set(key: string, value: any) {
-		if (this.memory.has(key)) {
-			this.memory.set(key, value)
-		} else {
-			let p = this.parent
-			let found = false
-			while (p) {
-				if (p.memory.has(key)) {
-					p.memory.set(key, value)
-					found = true
-				}
-				p = p.parent
-			}
-			if (!found) {
-				throw new Error("Interpretter Error: trying to reassign an undeclared variable " + key)
-			}
-		}
+	hasKey(key:string) {
+     if(this.memory.has(key)){
+		 return this
+	  }
+	  if(this.parent){
+		 return this.parent.hasKey(key)
+	  }
 	}
 
+	set(key: string, value: any) {
+		const env = this.hasKey(key)
+		if(!env) 
+			throw new Error("Interpretter Error: trying to reassign an undeclared variable " + key )
+		 env.memory.set(key, value)
+  }
+
 	get(value: string) {
-		if (this.memory.has(value)) {
-			return this.memory.get(value)
-		} else {
-			let p = this.parent
-			while (p) {
-				if (p.memory.has(value)) {
-					return p.get(value)
-				}
-				p = p.parent
-			}
-		}
+	   let scope = this.hasKey(value)
+		if (!scope) 
+			throw new Error("Interpretter Error: variable " + value + " is not defined.")
+		return scope.memory.get(value)	
 	}
 
 	record() {

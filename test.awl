@@ -26,9 +26,9 @@ fun createStudent(){
 	students <~ s1
 }
 
-
-for( i in 0 -> 2 ){
-createStudent()
+let n = toInt(getInput("enter the number of students : "))
+for( i in 0 -> n ){
+  createStudent()
 }
 printOut(students)
 
