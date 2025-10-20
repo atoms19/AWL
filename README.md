@@ -23,19 +23,19 @@
   </a>
 </p>
 <p align="center">
-  <a href="#-Introduction">Introduction</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-syntax-overview">Syntax Overview</a> •
-  <a href="#-data-types">Data Types</a> •
-  <a href="#-functions">Functions</a> •
-  <a href="#-control-flow">Control Flow</a> •
-  <a href="#-arrays">Arrays</a> •
-  <a href="#-strings">Strings</a> •
-  <a href="#-operators">Operators</a> •
-  <a href="#-structs">Structs</a> •
-  <a href="#-including-files">Including Files</a> •
-  <a href="#-syntax-highlighting">Syntax Highlighting</a> •
-  <a href="#-future-plans">Future Plans</a>
+  <a href="#Introduction">Introduction</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#syntax-overview">Syntax Overview</a> •
+  <a href="#data-types">Data Types</a> •
+  <a href="#functions">Functions</a> •
+  <a href="#control-flow">Control Flow</a> •
+  <a href="#arrays">Arrays</a> •
+  <a href="#strings">Strings</a> •
+  <a href="#operators">Operators</a> •
+  <a href="#structs">Structs</a> •
+  <a href="#including-files">Including Files</a> •
+  <a href="#syntax-highlighting">Syntax Highlighting</a> •
+  <a href="#future-plans">Future Plans</a>
 </p>
 
 
