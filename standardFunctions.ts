@@ -148,10 +148,10 @@ export const standardFunctions = {
 	"arrayInsert": arrayInsert,
 	"arrayInsertAt": arrayInsertAt,
 	"arrayRemoveAt": arrayRemoveAt,
-	"arrayLength": arrayLength
-	,"toCharCode": toCharCode
-	,"toChar": toChar
-	,"AND": AND
+	"arrayLength": arrayLength,
+	"toCharCode": toCharCode,
+	"toChar": toChar
+	, "AND": AND
 	, "OR": OR
 	, "XOR": XOR
 	, "NOT": NOT

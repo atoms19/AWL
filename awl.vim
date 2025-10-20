@@ -1,5 +1,6 @@
+
 " Keywords
-syntax keyword awlKeyword declare for break in if else while for return define
+syntax keyword awlKeyword  for break in if else while for return let fun struct new include
 highlight link awlKeyword Keyword
 
 
@@ -10,6 +11,9 @@ highlight link awlOperator Operator
 " Numbers
 syntax match awlNumber /\v\d+(\.\d+)?/
 highlight link awlNumber Number
+
+syntax keyword awlSpecial null true false 
+highlight link awlSpecial Number 
 
 " Strings
 syntax region awlString start=+"+ end=+"+

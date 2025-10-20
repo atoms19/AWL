@@ -211,26 +211,30 @@ export async function interpret(program: Program) {
 		if (d.target.type == "Identifier") {
 			env.set(d.target.name, v)
 		} else if (d.target.type == "MemberExpression") {
-			let obj = d.target.operand
-			if(debugMode) console.log("Assigning to member expression ", d.target)
-			while(obj.type == "MemberExpression") {
-				obj = obj.operand
+			let expr = d.target;
+			let chain = [];
+			while (expr.type === 'MemberExpression') {
+				chain.unshift(expr.property);
+				expr = expr.operand;
 			}
-			let base = await interpretValue(obj, env)
-			let rbase:any;
-			if(debugMode) console.log("Base object ", base)
-		   if(debugMode) console.log("Target property ", d.target.property)
-		   let current = d.target
-	       while(current.type=="MemberExpression"){
-			   let prop = await interpretValue(current.property, env)
-				if(debugMode) console.log("Current property ", prop)	
-				rbase = base[prop]
-				if(debugMode) console.log("Current base ", rbase)
-			  current = current.operand
-			 }
 
-			 if(debugMode) console.log("Final base ", rbase,current)
-			 rbase[await interpretValue(d.target.property, env)] = v
+			let obj = await interpretValue(expr, env);
+
+			const lastPropExpr = chain.pop();
+			if (lastPropExpr === undefined) {
+				throw new Error("Invalid assignment target");
+			}
+
+			for (const propExpr of chain) {
+				const prop = await interpretValue(propExpr, env);
+				if (obj[prop] === undefined) {
+					throw new Error(`Cannot access property '${prop}' on undefined.`);
+				}
+				obj = obj[prop];
+			}
+
+			const propertyToSet = await interpretValue(lastPropExpr, env);
+			obj[propertyToSet] = v;
 		}
 	}
 
@@ -394,6 +398,3 @@ export async function interpret(program: Program) {
 
 	if (debugMode) console.log("memory", global);
 }
-
-
-
