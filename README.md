@@ -25,15 +25,7 @@
 <p align="center">
   <a href="#Introduction">Introduction</a> •
   <a href="#getting-started">Getting Started</a> •
-  <a href="#syntax-overview">Syntax Overview</a> •
-  <a href="#data-types">Data Types</a> •
-  <a href="#functions">Functions</a> •
-  <a href="#control-flow">Control Flow</a> •
-  <a href="#arrays">Arrays</a> •
-  <a href="#strings">Strings</a> •
-  <a href="#operators">Operators</a> •
-  <a href="#structs">Structs</a> •
-  <a href="#including-files">Including Files</a> •
+  <a href="#syntax-overview">Syntax Overview</a> • 
   <a href="#syntax-highlighting">Syntax Highlighting</a> •
   <a href="#future-plans">Future Plans</a>
 </p>
@@ -160,7 +152,7 @@ this is a multi line comment
 
 ### Functions in AWL
 
-### builtin functions
+#### builtin functions
 these are some of the builtin functions in awl
 
 - `printOut(x)` : prints x to the console
@@ -191,7 +183,7 @@ statements after return are not executed
 
 only positional paramerters are supported as of now
 
-### Control flow in AWL
+## Control flow in AWL
 control flow in awl is done using `if` ,`while` and `for` keywords 
 all control statements can be followed by a block of code enclosed in `{}`
 or a single statement without `{}`
@@ -223,11 +215,11 @@ if(condition) printOut("single statement if")
 
 `break` can be used to exit a loop , its behaviour for nested loops might be broken
 
-#### for loops 
+### for loops 
 due to furstration of writing while loops i finally took my time to write for loops
 for loops in awl is super simple they support ranges 
 
-##### ranges 
+#### ranges 
 ```rust
 for (i in 0 -> 10 ){
     printOut(i)
@@ -251,7 +243,7 @@ for( i in  0 -> arrayLength(arr)){
     printOut(arrayGet(i, arr))
 }
 ```
-###### specifiying step in ranges 
+##### specifiying step in ranges 
 
 you can also specify step in ranges using `by` keyword after the end value of the range 
 
@@ -279,7 +271,7 @@ for( i in 0 -> 1 by 0.1){
 
 
 
-##### iterators 
+#### iterators 
 you can also iterate over arrays using for loops 
 
 ```rust
@@ -305,11 +297,12 @@ awl uses functions for bitewise operations unlike other c based languages
 we reserve most symbols for syntactic meaning rather than bitewise as you wont be 
 dealing with bitewise often 
 
-`AND(a,b)` this function will give u bitewise and 
-`OR(a,b)` is bitewise or 
-`XOR(a,b)` is bitewise xor 
-`NOT(a)` is bitewise not 
-
+- `AND(a,b)` is bitewise and 
+- `OR(a,b)` is bitewise or 
+- `XOR(a,b)` is bitewise xor 
+- `NOT(a)` is bitewise not 
+- `L_SHIFT(a,b)` is left shift
+- `R_SHIFT(a,b)` is right shift
 
 ### Arrays in AWL
 
@@ -329,14 +322,14 @@ let mixedArr = [1, "hello", 2.5, [1,2,3]]
 arrays are dynamically sized , you can add or remove elements from them
 you can access the elements from an array at any index using `<array-name>[index]` 
 
-```awl
+```py
 let arr = [1,2,3,4,5]
 printOut(arr[0]) #prints 1
 
 ```
 
 you can also modify the elements at any index the same way by assigning to an index
-```awl
+```py
 let arr = [1,2,3,4,5]
 arr[0] = 10
 printOut(arr[0]) #prints 10
@@ -344,7 +337,7 @@ printOut(arr[0]) #prints 10
 
 
 arrays also support negative indexing just like in python 
-```awl
+```py
 let arr = [1,2,3,4,5]
 printOut(arr[-1]) #prints 5
 ```
@@ -353,13 +346,13 @@ printOut(arr[-1]) #prints 5
 
 arrays can be sliced using the same syntax we used in ranges 
 
-```awl
+```py
 let arr = [1,2,3,4,5]
 let slicedArr = arr[1 -> 4] #slicedArr = [2,3]
 
 ```
 you can also specify step in slicing 
-```awl
+```py
 let  arr = [1,2,3,4,5]
 let slicedArr = arr[0 -> 5 by 2] #slicedArr = [1,3,5]
 ```
@@ -395,7 +388,6 @@ for removing at any index using operators you can use `~>` operator
 let arr = [1,2,3,4,5]
 arr ~> 2 #arr = [1,2,4,5]
 ```
-
 this will remove the element at index 2 from array but will not return it , as its a standalone statment 
 and not to be confused with expressions or to be used in them 
 
