@@ -32,8 +32,10 @@ export class Environment {
 
 	get(value: string) {
 	   let scope = this.hasKey(value)
-		if (!scope) 
-			throw new Error("Interpretter Error: variable " + value + " is not defined.")
+		if (!scope){
+			 return null
+		} 
+		//	throw new Error("Interpretter Error: variable " + value + " is not defined.")
 		return scope.memory.get(value)	
 	}
 

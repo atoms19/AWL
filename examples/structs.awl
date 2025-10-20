@@ -1,5 +1,3 @@
-
-
 struct student {
   let name = null 
   let marks = null 
@@ -20,10 +18,3 @@ printOut(Students[0]["name"])
 printOut(Students)
 Students[0]["name"]="vishal"
 
-{
-  
-
-
-}
-
-let n= new student

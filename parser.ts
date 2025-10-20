@@ -111,7 +111,7 @@ export function parse(tokens: Token[]) {
 	//relational operators 
 	const parse4Expression = () => {
 		let left: any = parse3Expression()
-		while (peek(0) && (["<=", "<", ">", ">=", "^"].includes(peek(0).data))) {
+		while (peek(0) && (["<=", "<", ">", ">="].includes(peek(0).data))) {
 			let op = yum().data;
 			let right = parse3Expression()
 			left = {
@@ -144,10 +144,10 @@ export function parse(tokens: Token[]) {
 	}
 
 	const parse2Expression = () => {
-		let left: any = parseUnaryExpression()
+		let left: any = parseExponentationExpression()
 		while (peek(0) && (peek(0).data == '*' || peek(0).data == '/' || peek(0).data == '%')) {
 			let op = yum().data;
-			let right = parseUnaryExpression()
+			let right = parseExponentationExpression()
 			left = {
 				type: 'BinaryExpression',
 				operator: op,
@@ -158,8 +158,23 @@ export function parse(tokens: Token[]) {
 		}
 		return left
 	}
+	const parseExponentationExpression = ()=>{
+      		let left: any = parseUnaryExpression()
+		while (peek(0) && peek(0).type=="operator" && (peek(0).data == '^')) {
+			let op = yum().data;
+			let right = parseUnaryExpression()
+			left = {
+				type: 'BinaryExpression',
+				operator: op,
+				left,
+				right
+			} as BinaryExpression
+
+		}
+		return left 
+	}
 	const parseUnaryExpression = () => {
-		if (peek(0) && (peek(0).data == "!" || peek(0).data == "-")) {
+		if (peek(0) && peek(0).type =="operator" && (peek(0).data == "!" || peek(0).data == "-")) {
 			let op = yum().data
 			return {
 				type: "UnaryExpression",

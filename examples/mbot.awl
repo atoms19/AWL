@@ -1,0 +1,90 @@
+# Mandelbrot set visualiser written in AWL
+printOut("Mandelbrot set visualiser written in AWL")
+
+###
+# The 'mandelbrot' function calculates the "escape time" for a
+# given point (real, imag) on the complex plane.
+###
+fun mandelbrot(real, imag) {
+    let limit = 100
+    
+    # We use the same logic as the original code (Z starts at c)
+    let zReal = real
+    let zImag = imag
+
+    # AWL's 'for...in' loop is perfect for C-style loops.
+    # '0 -> limit' will run from i = 0 to 99.
+    for (i in 0 -> limit) {
+        let rtwo = zReal^2
+        let itwo = zImag^2
+        if (rtwo+ itwo > 4) {
+		      limit = i
+            break
+        }
+        # If not escaped, calculate the next value: Z = Z^2 + c
+        zImag = 2 * zReal * zImag + imag
+        zReal = rtwo - itwo + real
+    }
+
+    return limit
+}
+
+# --- Main Program ---
+
+# 1. Define the canvas size
+let width = 150
+let height = 50
+
+# 2. Define the coordinates on the complex plane
+let xstart = 0 - (9 / 4) # -2.25
+let xfin = (1 / 4)        # 0.25
+let ystart = 0 - 1      # -1.0
+let yfin = 1            # 1.0
+
+# 3. Calculate step size for each pixel
+let dx = (xfin - xstart) / (width - 1)
+let dy = (yfin - ystart) / (height - 1)
+
+# 4. Build and print the top border
+let borderH = "++"
+for (i in 0 -> width) {
+    borderH = borderH + "=" # Use + for string concatenation
+}
+borderH = borderH + "++"
+printOut(borderH)
+
+# 5. Loop through every pixel (row by row)
+for (i in 0 -> height) {
+    let line = "||" # Start the row with a left border
+
+    # Loop through every column in this row
+    for (j in 0 -> width) {
+        let x = xstart + j * dx
+        let y = ystart + i * dy
+
+        # Get the "color" value for this pixel
+        let value = mandelbrot(x, y)
+
+        # Map the value to a character
+        if (value == 100) {
+            line = line + " " # In the set
+        } else if (value > 50) {
+            line = line + "-"
+        } else if (value > 25) {
+            line = line + "+"
+        } else if (value > 10) {
+            line = line + "o"
+        } else if (value > 5) {
+            line = line + "0"
+        } else {
+            line = line + "#" # Escaped very quickly
+        }
+    }
+
+    # Add the right border and print the full line
+    line = line + "||"
+    printOut(line)
+}
+
+# 6. Print the bottom border
+printOut(borderH)

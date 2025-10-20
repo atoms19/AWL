@@ -1,9 +1,0 @@
-class Parser{
-		cosntructor(){
-				
-		}
-		parse(){
-
-
-		}
-}
