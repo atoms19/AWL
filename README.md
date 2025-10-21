@@ -659,7 +659,7 @@ printOut(result) #prints 30
 there is no standard library as of now so you have to write your own utility functions
 might add a standard library in the future
 
-## extra libarires 
+# extra libarires 
 
 
 -----
@@ -695,26 +695,13 @@ The constant $e$, approximately $2.71828...$. The base of the natural logarithm.
 
 Returns the smaller of the two numbers `a` and `b`.
 
-```awl
-printOut(min(10, 20)) # Prints 10
-```
-
 ### fun max(a, b)
 
 Returns the larger of the two numbers `a` and `b`.
 
-```awl
-printOut(max(10, 20)) # Prints 20
-```
-
 ### fun abs(a)
 
 Returns the absolute (non-negative) value of `a`.
-
-```awl
-printOut(abs(-5.5)) # Prints 5.5
-printOut(abs(5.5))  # Prints 5.5
-```
 
 -----
 
@@ -723,33 +710,16 @@ printOut(abs(5.5))  # Prints 5.5
 ### fun ceil(a)
 
 Returns the "ceiling" of `a`, which is the smallest integer greater than or equal to `a`. It rounds numbers **up**.
-
-```awl
-printOut(ciel(3.1)) # Prints 4
-printOut(ciel(3.0)) # Prints 3
-printOut(ciel(-3.9)) # Prints -3
-```
-
 ### fun floor(a)
 
-⚠️ **Important Note:** This function truncates the decimal (rounds toward zero). This matches `floor` for positive numbers, but not for negative ones.
+**Important Note:** This function truncates the decimal (rounds toward zero). This matches `floor` for positive numbers, but not for negative ones.
 (e.g., The true mathematical `floor` of $-3.9$ is $-4$, but this function will return $-3$).
 
-```awl
-printOut(floor(3.9)) # Prints 3
-printOut(floor(-3.9)) # Prints -3 (truncated)
-```
 
 ### fun round(a)
 
 
 Returns the value of `a` rounded to the nearest integer. Numbers ending in `.5` are rounded away from zero.
-
-```awl
-printOut(round(3.1)) # Prints 3
-printOut(round(3.9)) # Prints 4
-printOut(round(-3.9)) # Prints -4
-```
 
 -----
 
@@ -759,17 +729,13 @@ printOut(round(-3.9)) # Prints -4
 
 Returns the square root of `a` by calculating $a^{0.5}$.
 
-```awl
-printOut(sqrt(100)) # Prints 10
-```
-
 ### fun log(a)
 
-Returns the **base-10 logarithm** of `a`. This function assumes a native function `ln(a)` (natural log) exists.
+Returns the **base-10 logarithm** of `a`. 
 
-```awl
-printOut(log(100)) # Prints 2
-```
+### fun ln(a)
+Returns the **natural logarithm** (base $e$) of `a`. 
+this is a native function meaning u can use it without including the math module
 
 -----
 
@@ -777,22 +743,18 @@ printOut(log(100)) # Prints 2
 
 `sin(a)` and `cos(a)` are provided as native functions and that `a` is in radians.
 
+ other trigonomic functions expect `a` to be in radians as well
 ### fun tan(a)
 
-Returns the tangent of `a`.
 
 ### fun sec(a)
 
-Returns the secant of `a`.
 
 ### fun cosec(a)
 
-Returns the cosecant of `a`.
 
 ### fun cot(a)
 
-Returns the cotangent of `a`.
------
 
 
 ---
@@ -808,7 +770,6 @@ include "stdlib/complex.awl"
 
 -----
 
-## Data Structure
 
 ### struct ComplexNo
 
@@ -933,12 +894,17 @@ and then run the following command to enable it
 
 ## Future Plans
 
-- add closures 
-- add a standard library (math , string )
-- more optimizations 
+here are V0.2 plans for awl
 
-awl is supposed to be a typesafe language but as of now it isnt
-i plan to add typesafety in the future 
-along with a simple standard libary and support for obejct oriented paradigm
+- add closures
+- dot notation for struct property access
+- more slight optimizations 
+    - constant folding 
+    - memory refrence optimizations  
+- better error reporting accurate line numbers 
 
+
+## contribution guide 
+contributions are welcome feel free to open issues and PRs,
+make sure you read the CONTRIBUTING.md file before making a PR
 
