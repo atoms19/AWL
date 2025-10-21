@@ -1,5 +1,8 @@
+# A simple taste of AWL
 include "stdlib/string.awl"
 
-let s ="HELLo"
+let name = "   AWL v0.1!   "
+let cleanName = stringTrim(name)
+printOut(cleanName)
 
-printOut(stringToLower(s))
+# Prints "AWL v0.1!"
