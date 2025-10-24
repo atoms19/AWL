@@ -49,6 +49,13 @@ other area where awl can be used is in educational purposes to teach programming
 
 # Getting Started 
 
+## try it out in online playground
+you can try out awl in the online playground here
+
+[visit online playground](https://awl-playground.now.sh)
+
+thanks arnav for making this, do checkout the repo [awl-playground](https://github.com/arnav-kr/awl-playground)
+
 ## Using the binary executable
 awl has a binary executable in the repo , its just named awl you can check the releases to get this executable 
 download the file and run it in your terminal give it a file that contains awl code
