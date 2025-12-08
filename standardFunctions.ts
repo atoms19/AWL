@@ -160,6 +160,15 @@ const executeCommand = async (command:string) => {
 
 }
 
+const getArguments=()=>{
+		if(process.argv.length<=3) return [];
+	   return process.argv.slice(3);
+}
+
+const exitFn=(code:number)=>{
+	 process.exit(code)
+}
+
 
 
 export const standardFunctions = {
@@ -167,6 +176,7 @@ export const standardFunctions = {
 	"printInline": executeInlineOutPut,
 	"getTime": clock,
 	"getInput": executeInput,
+   "getArguments":getArguments,
 	"toInt": convertToInteger,
 	"toFloat": convertToFloat,
 	"toArray": toArray,
@@ -191,6 +201,7 @@ export const standardFunctions = {
  "sin":Math.sin,
  "cos":Math.cos,
  "ln":Math.log,
+ "exit":exitFn
 }
 
 

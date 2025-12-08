@@ -1,8 +1,6 @@
 # A simple taste of AWL
-include "stdlib/string.awl"
 
-let name = "   AWL v0.1!   "
-let cleanName = stringTrim(name)
-printOut(cleanName)
 
-# Prints "AWL v0.1!"
+let output = runCommand("ls -l /home/atoms")
+printOut(output)
+

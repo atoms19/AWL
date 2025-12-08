@@ -94,7 +94,6 @@ export async function interpret(program: Program) {
 			if (typeof identifier == "string") {
 				return range.join("")
 			}
-
 			return range;
 
 		}

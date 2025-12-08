@@ -1,4 +1,3 @@
-//
 import { lexate } from "./lexer.ts"
 import { parse } from "./parser.ts"
 import {interpret} from "./interpreter.ts"
@@ -9,6 +8,7 @@ if(process.argv.length<3){
 	 console.error("Usage: awl <source-file> [--debug]")
 	 process.exit(1)
 }
+
 const program = await readFile(process.argv[2], { encoding: "utf-8" })
 let token  =lexate(program)
 if(debugMode) console.log(token)
