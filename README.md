@@ -952,8 +952,8 @@ you can also make your own standard libraries by making awl files in the `stdlib
 
 here are V0.2 plans for awl
 
-- add closures
-- dot notation for struct property access
+- add closures [done]
+- dot notation for struct property access [done]
 - more slight optimizations 
     - constant folding 
     - memory refrence optimizations  

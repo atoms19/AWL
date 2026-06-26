@@ -44,7 +44,7 @@ export async function interpret(program: Program) {
 			case "FunctionCall":
 				return await interpretFunctionCall(val, env)
 			case "FunctionDefinition":
-				return await interpretFunctionDefinition(val)
+				return await interpretFunctionDefinition(val,env)
 			case "NumericLiteral":
 				return val.value
 			case "NullLiteral":
@@ -100,8 +100,8 @@ export async function interpret(program: Program) {
 
 		return identifier[property]
 	}
-	const interpretFunctionDefinition = async (fn: FunctionDefinition) => {
-		global.define(fn.name, fn)
+	const interpretFunctionDefinition = async (fn: FunctionDefinition,env:Environment) => {
+		env.define(fn.name, { ...fn, closure: env })
 	}
 
 	const interpretUnaryExpression = async (exp: UnaryExpression, env: Environment) => {
@@ -181,7 +181,8 @@ export async function interpret(program: Program) {
 			return await standardFunctions[f.callee.name](...params)
 		} else if (await env.get(f.callee.name)) {
 			let fn = env.get(f.callee.name)
-			let scope = new Environment(env)
+			let parentEnv = fn.closure || env
+			let scope = new Environment(parentEnv)
 			if (params.length == fn.parameters.length) {
 				params.forEach((param, i) => {
 					scope.define(fn.parameters[i], param)
@@ -362,7 +363,10 @@ export async function interpret(program: Program) {
 				await interpretIncludeStatement(statement, env)
 		}else if (statement.type == "Declaration") {
 			await interpretDeclaration(statement, env)
-		} else if (statement.type == "FunctionCall") {
+		}else if(statement.type =="FunctionDefinition"){
+		   await interpretFunctionDefinition(statement,env)
+		}
+		else if (statement.type == "FunctionCall") {
 			await interpretFunctionCall(statement, env)
 		} else if (statement.type == "Assignment") {
 			await interpretAssignment(statement, env)

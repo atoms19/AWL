@@ -1,3 +1,5 @@
+import { Environment } from "./environment"
+
 export type Expression = BinaryExpression | UnaryExpression | NumericLiteral | FunctionCall | MemberExpression 
 
 export interface ExpressionStatement{
@@ -15,7 +17,8 @@ export interface FunctionDefinition{
   type:"FunctionDefinition",
   name:string,
   parameters?:string[],
-  body:Statement[]
+  body:Statement[],
+  closure:Environment
 }
 
 export interface Identifier{

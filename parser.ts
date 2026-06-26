@@ -158,9 +158,9 @@ export function parse(tokens: Token[]) {
 		}
 		return left
 	}
-	const parseExponentationExpression = ()=>{
-      		let left: any = parseUnaryExpression()
-		while (peek(0) && peek(0).type=="operator" && (peek(0).data == '^')) {
+	const parseExponentationExpression = () => {
+		let left: any = parseUnaryExpression()
+		while (peek(0) && peek(0).type == "operator" && (peek(0).data == '^')) {
 			let op = yum().data;
 			let right = parseUnaryExpression()
 			left = {
@@ -171,10 +171,10 @@ export function parse(tokens: Token[]) {
 			} as BinaryExpression
 
 		}
-		return left 
+		return left
 	}
 	const parseUnaryExpression = () => {
-		if (peek(0) && peek(0).type =="operator" && (peek(0).data == "!" || peek(0).data == "-")) {
+		if (peek(0) && peek(0).type == "operator" && (peek(0).data == "!" || peek(0).data == "-")) {
 			let op = yum().data
 			return {
 				type: "UnaryExpression",
@@ -189,6 +189,23 @@ export function parse(tokens: Token[]) {
 		let exp = parseBaseExpression()
 		while (peek(0) && peek(0).type == "openingsquarebracket") {
 			exp = parseIndexing(exp)
+		}
+
+		while (peek(0) && peek(0).type == "operator" && peek(0).data == ".") {
+			yum(); // eat the dot 
+			let prop = yum();
+			if (prop.type != "identifier") {
+				throwParserError("expected identifier after dot syntax");
+			}
+
+			exp = {
+				type: "MemberExpression",
+				operand: exp,
+				property: {
+					type: "StringLiteral",
+					value: prop.data
+				}
+			}
 		}
 		return exp;
 	}
@@ -435,7 +452,7 @@ export function parse(tokens: Token[]) {
 
 	const parseIdentifier = (): Statement => {
 
-		if (peek(1) && peek(1).type == "openingsquarebracket") {
+		if (peek(1) && peek(1).type == "openingsquarebracket" || (peek(1).type=="operator" && peek(1).data ==".")) {
 			let value = parseMemberExpression()
 			if (peek(0) && peek(0).type == "assignment") {
 				yum()
@@ -490,20 +507,20 @@ export function parse(tokens: Token[]) {
 				name: identifier.data
 			}
 		}
-		else if(valueToBe.type=="MemberExpression"){
-				
-				yum()
-				return {
-					type: "FunctionCall",
-					callee: {
-						type: "Identifier",
-						name: "arrayInsertAt",
-					},
-					parameters: [valueToBe.property,valueToBe.operand,parseExpression()
-					]
+		else if (valueToBe.type == "MemberExpression") {
 
-				}
-			
+			yum()
+			return {
+				type: "FunctionCall",
+				callee: {
+					type: "Identifier",
+					name: "arrayInsertAt",
+				},
+				parameters: [valueToBe.property, valueToBe.operand, parseExpression()
+				]
+
+			}
+
 		}
 
 		yum() //eat the <~ operator
@@ -552,7 +569,10 @@ export function parse(tokens: Token[]) {
 		}
 		yumButOnly("closingbracket");
 
+		yumButOnly("openingcurlybracket");
 		const body = parseBlock()
+		yumButOnly("closingcurlybracket");
+
 		return {
 			type: "FunctionDefinition",
 			name: functionName.data,

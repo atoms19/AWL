@@ -8,7 +8,7 @@ export interface Token {
 }
 
 let Keywords: String[] = ["let","in", "fun", "if", "else", "while","return", "break", "continue","for","by","true", "false","null","struct","new","include"]
-let Operators: String[] = ["+", "-", "/", "*", "%", "^", "&&", "||", "==", ">", "<", "&", "|","!","!=","->","~","<~","~>"]
+let Operators: String[] = ["+", "-", "/", "*", "%", "^", "&&", "||", "==", ">", "<", "&", "|","!","!=","->","~","<~","~>","."]
 
 
 

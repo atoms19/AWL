@@ -9,6 +9,7 @@ if(process.argv.length<3){
 	 process.exit(1)
 }
 
+
 const program = await readFile(process.argv[2], { encoding: "utf-8" })
 let token  =lexate(program)
 if(debugMode) console.log(token)

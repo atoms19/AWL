@@ -1,6 +1,12 @@
-# A simple taste of AWL
+struct Person {
+     let name = ""
+     let age = 0
+     let isStudent =false 
+}
+let person1 = new Person
+person1.name = "vish"
+person1.age= 20
+person1.isStudent = true
 
 
-let output = runCommand("ls -l /home/atoms")
-printOut(output)
-
+printOut(person1.name) #prints vish
